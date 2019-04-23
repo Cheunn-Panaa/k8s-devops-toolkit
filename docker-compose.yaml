@@ -1,0 +1,16 @@
+version: "3.7"
+services:
+  kdt-machine:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - kube:/home/devops/.kube
+    networks:
+      - overlay
+    
+volumes:
+  kube:
+
+networks:
+  overlay:
