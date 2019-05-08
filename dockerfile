@@ -1,5 +1,3 @@
-FROM golang:1-alpine3.9
-
 FROM alpine:3.9
 
 # Install basic elements.
@@ -26,6 +24,12 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s
     && rm -rf kubectx
 
 USER devops
+
+# install krew
+RUN cd /home/devops/ && curl -fsSLO "https://storage.googleapis.com/krew/v0.2.1/krew.{tar.gz,yaml}" \
+    && tar zxvf krew.tar.gz \
+    && ./krew-"$(uname | tr '[:upper:]' '[:lower:]')_amd64" install --manifest=krew.yaml --archive=krew.tar.gz \
+    && rm -rf ./krew*
 
 COPY .bashrc /home/devops/
 
