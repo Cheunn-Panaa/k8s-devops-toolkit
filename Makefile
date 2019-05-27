@@ -14,8 +14,7 @@ SHELL_DEBUG?=
 
 DATE:=`date +'%Y%m%d-%H%M%S'`
 
-ENV_ARGS := --rm --name "kdt-$(DATE)" --hostname "kdt-$(DATE)"
-ENV_ARGS := $(ENV_ARGS) -p 8080:8080 -p 8443:8443
+ENV_ARGS := --rm --name "kdt-$(DATE)"
 ifneq ($(FOLDER),)
 	ENV_ARGS := $(ENV_ARGS) -v $(FOLDER):/home/devops/mounted -w /home/devops/mounted
 endif
@@ -42,7 +41,8 @@ image-remove:
 image-attach:
 	$(info Attach docker image $(IMAGE_NAME):$(VERSION))
 	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.kube:/home/devops/.kube:Z)
-	@docker run -it $(ENV_ARGS) $(IMAGE_NAME):$(VERSION)
+	$(eval ENV_ARGS=$(ENV_ARGS) --hostname kdt-$(DATE))
+	@docker run -it $(ENV_ARGS) -p 8080:8080 -p 8443:8443 $(IMAGE_NAME):$(VERSION)
 
 env-build:
 	$(info Build docker environment)
@@ -52,16 +52,20 @@ env-build:
 env-attach:
 	$(info Attach docker environment)
 	$(eval ENV_ARGS=$(ENV_ARGS) -v k8s-devops-toolkit_kube:/home/devops/.kube:Z)
-	@docker-compose run $(ENV_ARGS) kdt-machine
+	$(eval ENV_ARGS=$(ENV_ARGS) --service-ports)
+	@docker-compose run $(ENV_ARGS) kdt-machine 
 
 env-remove:
 	$(info Remove docker environment)
 	@docker-compose down -v --rmi all $(SHELL_DEBUG)
 
 publish:
-	docker tag $(IMAGE_NAME):$(VERSION) $(IMAGE_NAME):latest
-	docker push $(IMAGE_NAME):$(VERSION)
-	docker push $(IMAGE_NAME):latest
+	$(info Publish new version $(VERSION))
+	$(info - set tags)
+	@docker tag $(IMAGE_NAME):$(VERSION) $(IMAGE_NAME):latest
+	$(info - push images)
+	@docker push $(IMAGE_NAME):$(VERSION)
+	@docker push $(IMAGE_NAME):latest
 
 version:
 	@echo $(VERSION)
@@ -105,3 +109,11 @@ endif
 	@git tag v$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH) $(SHELL_DEBUG)
 
 	@echo new version : v$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)
+
+	@if make .prompt-yesno message="Do you want push branch and tag" 2> /dev/null; then \
+		git push; \
+		git push --tags; \
+	fi
+
+.prompt-yesno:
+	@echo "$(message)? [y/N] " && read ans && [ $${ans:-N} = y ]
