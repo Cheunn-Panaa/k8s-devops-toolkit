@@ -12,21 +12,37 @@ RUN addgroup -S devops \
     && echo 'devops ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers
 
 # Install latest version of k8s tools.
-RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl \
-    && mv ./kubectl /usr/local/bin/kubectl \
-    && git clone https://github.com/ahmetb/kubectx.git \
-    && cp kubectx/completion/kubectx.bash /etc/profile.d/kubectx \
-    && cp kubectx/completion/kubens.bash /etc/profile.d/kubens \
-    && cp kubectx/kubectx /usr/local/bin/ \
-    && cp kubectx/kubens /usr/local/bin/ \
-    && chmod +x /usr/local/bin/* \
+ENV INSTALL_DIR /tmp/install
+ENV KUBECTL_VERSION 1.14.3
+ENV KUBECTX_VERSION 0.6.3
+ENV K9S_VERSION 0.7.6
+ENV YQ_VERSION 2.4.0
+ENV STERN_VERSION 1.10.0
+ENV POPEYE_VERSION 0.3.10
+RUN mkdir ${INSTALL_DIR} && cd ${INSTALL_DIR} \
+    && wget -O /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
     && kubectl completion bash > /etc/profile.d/kubectl \
-    && rm -rf kubectx
+    && wget -O kubectx.tar.gz https://github.com/ahmetb/kubectx/archive/v${KUBECTX_VERSION}.tar.gz \
+    && tar -xvzf kubectx.tar.gz \
+    && cp kubectx-${KUBECTX_VERSION}/completion/kubectx.bash /etc/profile.d/kubectx \
+    && cp kubectx-${KUBECTX_VERSION}/completion/kubens.bash /etc/profile.d/kubens \
+    && cp kubectx-${KUBECTX_VERSION}/kubectx /usr/local/bin/ \
+    && cp kubectx-${KUBECTX_VERSION}/kubens /usr/local/bin/ \
+    && wget -O k9s.tar.gz https://github.com/derailed/k9s/releases/download/${K9S_VERSION}/k9s_${K9S_VERSION}_Linux_x86_64.tar.gz \
+    && tar -xvzf k9s.tar.gz \
+    && cp k9s /usr/local/bin/ \
+    && wget -O /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64 \
+    && wget -O /usr/local/bin/stern https://github.com/wercker/stern/releases/download/${STERN_VERSION}/stern_linux_amd64 \
+    && wget -O popeye.tar.gz https://github.com/derailed/popeye/releases/download/v${POPEYE_VERSION}/popeye_${POPEYE_VERSION}_Linux_x86_64.tar.gz \
+    && tar -xvzf popeye.tar.gz \
+    && cp popeye /usr/local/bin/ \
+    && chmod +x /usr/local/bin/* && cd .. && rm -rf ${INSTALL_DIR}}
 
 USER devops
 
 # install krew
-RUN cd /home/devops/ && curl -fsSLO "https://storage.googleapis.com/krew/v0.2.1/krew.{tar.gz,yaml}" \
+ENV KREW_VERSION 0.2.1
+RUN cd /home/devops/ && curl -fsSLO "https://storage.googleapis.com/krew/v${KREW_VERSION}/krew.{tar.gz,yaml}" \
     && tar zxvf krew.tar.gz \
     && ./krew-"$(uname | tr '[:upper:]' '[:lower:]')_amd64" install --manifest=krew.yaml --archive=krew.tar.gz \
     && rm -rf ./krew*
