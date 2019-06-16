@@ -20,7 +20,7 @@ ENV YQ_VERSION 2.4.0
 ENV STERN_VERSION 1.10.0
 ENV POPEYE_VERSION 0.3.10
 RUN mkdir ${INSTALL_DIR} && cd ${INSTALL_DIR} \
-    && wget -O /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
+    && wget -O /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
     && kubectl completion bash > /etc/profile.d/kubectl \
     && wget -O kubectx.tar.gz https://github.com/ahmetb/kubectx/archive/v${KUBECTX_VERSION}.tar.gz \
     && tar -xvzf kubectx.tar.gz \
