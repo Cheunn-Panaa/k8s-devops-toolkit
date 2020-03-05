@@ -13,7 +13,6 @@ RUN addgroup -S devops \
 
 # Install latest version of k8s tools.
 ENV INSTALL_DIR /tmp/install
-ENV STERN_VERSION 1.10.0
 ENV POPEYE_VERSION 0.3.10
 RUN mkdir ${INSTALL_DIR} && cd ${INSTALL_DIR} \
     && wget -qO /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
@@ -38,6 +37,9 @@ RUN wget -qO k9s.tar.gz https://github.com/derailed/k9s/releases/download/v${K9S
 
 ENV YQ_VERSION 3.2.1
 RUN wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64
+
+ENV STERN_VERSION 1.11.0
+RUN wget -qO /usr/local/bin/stern https://github.com/wercker/stern/releases/download/${STERN_VERSION}/stern_linux_amd64
     && tar -xzf popeye.tar.gz \
     && cp popeye /usr/local/bin/ \
     && chmod +x /usr/local/bin/* \
