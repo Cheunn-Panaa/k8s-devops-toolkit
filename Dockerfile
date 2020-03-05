@@ -13,7 +13,6 @@ RUN addgroup -S devops \
 
 # Install latest version of k8s tools.
 ENV INSTALL_DIR /tmp/install
-ENV KUBECTX_VERSION 0.6.3
 ENV K9S_VERSION 0.7.6
 ENV YQ_VERSION 2.4.0
 ENV STERN_VERSION 1.10.0
@@ -25,12 +24,14 @@ ENV KUBECTL_VERSION 1.17.0
 RUN wget -qO /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
     && chmod +x /usr/local/bin/* \
     && kubectl completion bash > /etc/profile.d/kubectl 
+
+ENV KUBECTX_VERSION 0.8.0
+RUN wget -qO kubectx.tar.gz https://github.com/ahmetb/kubectx/archive/v${KUBECTX_VERSION}.tar.gz \
     && tar -xzf kubectx.tar.gz \
     && cp kubectx-${KUBECTX_VERSION}/completion/kubectx.bash /etc/profile.d/kubectx \
     && cp kubectx-${KUBECTX_VERSION}/completion/kubens.bash /etc/profile.d/kubens \
     && cp kubectx-${KUBECTX_VERSION}/kubectx /usr/local/bin/ \
-    && cp kubectx-${KUBECTX_VERSION}/kubens /usr/local/bin/ \
-    && wget -qO k9s.tar.gz https://github.com/derailed/k9s/releases/download/${K9S_VERSION}/k9s_${K9S_VERSION}_Linux_x86_64.tar.gz \
+    && cp kubectx-${KUBECTX_VERSION}/kubens /usr/local/bin/ 
     && tar -xzf k9s.tar.gz \
     && cp k9s /usr/local/bin/ \
     && wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64 \
