@@ -51,11 +51,12 @@ RUN wget -qO popeye.tar.gz https://github.com/derailed/popeye/releases/download/
 USER devops
 
 # install krew
-ENV KREW_VERSION 0.2.1
-RUN cd /home/devops/ && curl -fsSLO "https://storage.googleapis.com/krew/v${KREW_VERSION}/krew.{tar.gz,yaml}" \
+ENV KREW_VERSION 0.3.4
+RUN cd /home/devops/ && curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/download/v${KREW_VERSION}/krew.{tar.gz,yaml}" \
     && tar zxf krew.tar.gz \
-    && ./krew-"$(uname | tr '[:upper:]' '[:lower:]')_amd64" install --manifest=krew.yaml --archive=krew.tar.gz \
-    && rm -rf ./krew*
+    && KREW=./krew-"$(uname | tr '[:upper:]' '[:lower:]')_amd64" \
+    && "$KREW" install --manifest=krew.yaml --archive=krew.tar.gz \
+    && "$KREW" update
 
 COPY .bashrc /home/devops/
 
