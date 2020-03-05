@@ -13,7 +13,6 @@ RUN addgroup -S devops \
 
 # Install latest version of k8s tools.
 ENV INSTALL_DIR /tmp/install
-ENV K9S_VERSION 0.7.6
 ENV YQ_VERSION 2.4.0
 ENV STERN_VERSION 1.10.0
 ENV POPEYE_VERSION 0.3.10
@@ -32,11 +31,11 @@ RUN wget -qO kubectx.tar.gz https://github.com/ahmetb/kubectx/archive/v${KUBECTX
     && cp kubectx-${KUBECTX_VERSION}/completion/kubens.bash /etc/profile.d/kubens \
     && cp kubectx-${KUBECTX_VERSION}/kubectx /usr/local/bin/ \
     && cp kubectx-${KUBECTX_VERSION}/kubens /usr/local/bin/ 
+
+ENV K9S_VERSION 0.17.4
+RUN wget -qO k9s.tar.gz https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_x86_64.tar.gz \
     && tar -xzf k9s.tar.gz \
-    && cp k9s /usr/local/bin/ \
-    && wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64 \
-    && wget -qO /usr/local/bin/stern https://github.com/wercker/stern/releases/download/${STERN_VERSION}/stern_linux_amd64 \
-    && wget -qO popeye.tar.gz https://github.com/derailed/popeye/releases/download/v${POPEYE_VERSION}/popeye_${POPEYE_VERSION}_Linux_x86_64.tar.gz \
+    && cp k9s /usr/local/bin/
     && tar -xzf popeye.tar.gz \
     && cp popeye /usr/local/bin/ \
     && chmod +x /usr/local/bin/* \
