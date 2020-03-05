@@ -13,7 +13,6 @@ RUN addgroup -S devops \
 
 # Install latest version of k8s tools.
 ENV INSTALL_DIR /tmp/install
-ENV YQ_VERSION 2.4.0
 ENV STERN_VERSION 1.10.0
 ENV POPEYE_VERSION 0.3.10
 RUN mkdir ${INSTALL_DIR} && cd ${INSTALL_DIR} \
@@ -36,6 +35,9 @@ ENV K9S_VERSION 0.17.4
 RUN wget -qO k9s.tar.gz https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_x86_64.tar.gz \
     && tar -xzf k9s.tar.gz \
     && cp k9s /usr/local/bin/
+
+ENV YQ_VERSION 3.2.1
+RUN wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64
     && tar -xzf popeye.tar.gz \
     && cp popeye /usr/local/bin/ \
     && chmod +x /usr/local/bin/* \
