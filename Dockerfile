@@ -13,9 +13,8 @@ RUN addgroup -S devops \
 
 # Install latest version of k8s tools.
 ENV INSTALL_DIR /tmp/install
-RUN mkdir ${INSTALL_DIR} && cd ${INSTALL_DIR} \
-    && wget -qO /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
-    && wget -qO kubectx.tar.gz https://github.com/ahmetb/kubectx/archive/v${KUBECTX_VERSION}.tar.gz \
+RUN mkdir ${INSTALL_DIR} && cd ${INSTALL_DIR} 
+
 ENV KUBECTL_VERSION 1.17.0
 RUN wget -qO /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
     && chmod +x /usr/local/bin/* \
@@ -45,6 +44,7 @@ RUN wget -qO popeye.tar.gz https://github.com/derailed/popeye/releases/download/
     && tar -xzf popeye.tar.gz \
     && cp popeye /usr/local/bin/ 
     
+RUN chmod +x /usr/local/bin/* \
     && kubectl completion bash > /etc/profile.d/kubectl \
     && cd .. && rm -rf ${INSTALL_DIR}}
 
