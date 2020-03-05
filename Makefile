@@ -3,7 +3,7 @@ IMAGE_NAME?=bipole3/kdt
 VERSION_MAJOR:=0
 VERSION_MINOR:=5
 VERSION_PATCH:=0
-VERSION=v$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)
+VERSION=$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)
 
 VERSION_TYPE?=
 GIT_MODIFICATION?=$(git diff-index --quiet HEAD -- || true);
@@ -68,7 +68,7 @@ publish:
 	@docker push $(IMAGE_NAME):latest
 
 version:
-	@echo $(VERSION)
+	@echo v$(VERSION)
 
 version-change:
 	$(call check_defined, VERSION_TYPE)
