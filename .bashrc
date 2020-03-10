@@ -1,16 +1,20 @@
 export HISTTIMEFORMAT="%d/%m/%y %T "
-export PS1='\u@\h:\W \$ '
+#export PS1='\u@\h:\W \$ '
+export PS1='[\W $(kube_ps1)]\$ '
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:${HOME}/.kube/bin:$PATH"
 
 source /etc/profile.d/bash_completion.sh
 source /etc/profile.d/kubectl
 source /etc/profile.d/kubens
 source /etc/profile.d/kubectx
+source /usr/local/bin/kube-ps1.sh 
 
 alias k="kubectl"
 alias kc="kubectl"
 alias kx="kubectx"
 alias kn="kubens"
+alias kp="kubeon"
+alias nokp="kubeoff"
 alias l='ls -CF'
 alias la='ls -A'
 alias ll='ls -alF'

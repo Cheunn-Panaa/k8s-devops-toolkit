@@ -1,9 +1,42 @@
 # k8s-devops-toolkit
 All needed tools for a gentle Dev-Ops
 
+## Quickstart
+
+### Install
+
+cd git; mkdir tools; cd tools
+git clone git@gitlab.com:dolmen-tech/tools/k8s-devops-toolkit.git
+
+### Build Docker Image
+
+make image-build
+
+### Run Docker Image
+
+make image-attach
+
+### Configure
+
+gcloud init
+
+gcloud container clusters get-credentials pkub --region europe-west1 --project kogus-production
+kx production=gke_kogus-production_europe-west1_pkub
+
+gcloud container clusters get-credentials pkub --region europe-west1 --project kogus-staging
+kx staging=gke_kogus-staging_europe-west1_skub
+
+gcloud container clusters get-credentials playground-kub --zone europe-west4-c --project kogus-playground
+kx playground=gke_kogus-playground_europe-west4-c_playground-kub
+
+### Test
+
+kubectx
+
+
 ## Commands
 
-Is based on make file, all commands must start with `make`.
+Are based on make file, all commands must start with `make`.
 
 ### Image commands
 

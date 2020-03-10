@@ -48,6 +48,8 @@ RUN chmod +x /usr/local/bin/* \
     && kubectl completion bash > /etc/profile.d/kubectl \
     && cd .. && rm -rf ${INSTALL_DIR}}
 
+RUN wget -qO /usr/local/bin/kube-ps1.sh https://raw.githubusercontent.com/jonmosco/kube-ps1/master/kube-ps1.sh
+
 USER devops
 
 # install krew
