@@ -21,8 +21,7 @@ make image-build
 make image-attach
 ```
 
-
-### Configure
+### Configure
 ```bash
 gcloud init
 
