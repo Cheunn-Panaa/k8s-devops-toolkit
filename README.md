@@ -5,6 +5,8 @@ All needed tools for a gentle Dev-Ops
 
 ### Install
 ```bash
+cd
+touch .history-docker
 cd git; mkdir tools; cd tools
 git clone git@gitlab.com:dolmen-tech/tools/k8s-devops-toolkit.git
 ```
