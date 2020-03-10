@@ -14,6 +14,7 @@ alias kc="kubectl"
 alias kx="kubectx"
 alias kn="kubens"
 alias kp="kubeon"
+alias ke="kubectl exec -it"
 alias nokp="kubeoff"
 alias l='ls -CF'
 alias la='ls -A'
