@@ -1,4 +1,4 @@
-IMAGE_NAME?=bipole3/kdt
+IMAGE_NAME?=dolmen/kdt
 
 VERSION_MAJOR:=0
 VERSION_MINOR:=5
@@ -41,6 +41,7 @@ image-remove:
 image-attach:
 	$(info Attach docker image $(IMAGE_NAME):$(VERSION))
 	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.kube:/home/devops/.kube:Z)
+	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.gcloud:/home/devops/.gcloud:Z)
 	$(eval ENV_ARGS=$(ENV_ARGS) --hostname kdt-$(DATE))
 	@docker run -it $(ENV_ARGS) -p 8080:8080 -p 8443:8443 $(IMAGE_NAME):$(VERSION)
 

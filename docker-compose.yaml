@@ -7,11 +7,12 @@ services:
       - "8443:8443"
     volumes:
       - kube:/home/devops/.kube
+      - gcloud:/home/devops/.gcloud
     networks:
       - overlay
     
 volumes:
   kube:
-
+  gcloud:
 networks:
   overlay:
