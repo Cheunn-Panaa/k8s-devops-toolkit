@@ -50,6 +50,18 @@ RUN chmod +x /usr/local/bin/* \
 
 RUN wget -qO /usr/local/bin/kube-ps1.sh https://raw.githubusercontent.com/jonmosco/kube-ps1/master/kube-ps1.sh
 
+ENV HELM2_VERSION 2.16.3
+RUN mkdir -p ./helm2 \
+    && wget -qO ./helm2/helm2.tar.gz https://get.helm.sh/helm-v${HELM2_VERSION}-linux-amd64.tar.gz \
+    && tar -xzf ./helm2/helm2.tar.gz -C ./helm2/ \
+    && cp ./helm2/linux-amd64/helm /usr/local/bin/helm2
+
+ENV HELM3_VERSION 3.1.1
+RUN mkdir -p ./helm3 \
+    && wget -qO ./helm3/helm3.tar.gz https://get.helm.sh/helm-v${HELM3_VERSION}-linux-amd64.tar.gz \
+    && tar -xzf ./helm3/helm3.tar.gz -C ./helm3/ \
+    && cp ./helm3/linux-amd64/helm /usr/local/bin/helm3    
+
 USER devops
 
 # install krew
