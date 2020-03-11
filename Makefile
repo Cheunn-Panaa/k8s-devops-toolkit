@@ -41,7 +41,7 @@ image-remove:
 image-attach:
 	$(info Attach docker image $(IMAGE_NAME):$(VERSION))
 	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.kube-docker:/home/devops/.kube:Z)
-	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.gcloud-docker:/home/devops/.gcloud:Z)
+	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.gcloud-docker:/home/devops/.config/gcloud:Z)
 	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.history-docker:/home/devops/.bash_history:Z)
 	$(eval ENV_ARGS=$(ENV_ARGS) --hostname kdt-$(DATE))
 	@docker run -it --rm $(ENV_ARGS) -p 8080:8080 -p 8443:8443 $(IMAGE_NAME):$(VERSION)
