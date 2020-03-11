@@ -9,6 +9,10 @@ cd
 touch .history-docker
 cd git; mkdir tools; cd tools
 git clone git@gitlab.com:dolmen-tech/tools/k8s-devops-toolkit.git
+
+#Convenient kp alias
+cd
+echo 'alias kp="cd ~/git/tools/k8s-devops-toolkit; make image-prompt"' >> .bash_profile
 ```
 
 ### Build Docker Image
@@ -18,10 +22,15 @@ make image-build
 
 ### Run Docker Image
 ```bash
+make image-prompt
+```
+
+### Run Docker Image with ports Binding 8080 & 8443
+```bash
 make image-attach
 ```
 
-### Configure
+### Configure (from the docker shell)
 ```bash
 gcloud init
 
@@ -46,11 +55,12 @@ Are based on make file, all commands must start with `make`.
 
 ### Image commands
 
-| Commands         | Options |  Descriptions                           |
-|------------------|---------|-----------------------------------------|
-| **image-build**  |         | Build docker image                      |
-| **image-remove** |         | Remove docker image                     |
-| **image-attach** |         | Create docker container & attach Shell  |
+| Commands         | Options |  Descriptions                                                               |
+|------------------|---------|-----------------------------------------------------------------------------|
+| **image-build**  |         | Build docker image                                                          |
+| **image-remove** |         | Remove docker image                                                         |
+| **image-attach** |         | Create docker container & attach Shell with ports 8080/8443 Locally Binded  |
+| **image-prompt** |         | Create docker container & attach Shell                                      |
 
 ### Env commands
 
