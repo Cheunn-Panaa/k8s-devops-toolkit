@@ -52,7 +52,9 @@ image-prompt:
 	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.kube-docker:/home/devops/.kube:Z)
 	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.gcloud-docker:/home/devops/.config/gcloud:Z)
 	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.history-docker:/home/devops/.bash_history:Z)
-	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME):/home/devops/hosthome:Z)		
+	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME):/home/devops/hosthome:Z)
+	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.gitconfig:/home/devops/.gitconfig:Z)
+	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.ssh:/home/devops/.ssh:Z)
 	$(eval ENV_ARGS=$(ENV_ARGS) --hostname kdt-$(DATE))
 	@docker run -it --rm $(ENV_ARGS) $(IMAGE_NAME):$(VERSION)		
 

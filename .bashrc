@@ -1,7 +1,7 @@
 export HISTTIMEFORMAT="%d/%m/%y %T "
 #export PS1='\u@\h:\W \$ '
 export PS1='[\W $(kube_ps1)]\$ '
-export PATH="${KREW_ROOT:-$HOME/.krew}/bin:${HOME}/.kube/bin:$PATH"
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:${HOME}/.kube/bin:/opt/mssql-tools/bin/:$PATH"
 
 source /etc/profile.d/bash_completion.sh
 source /etc/profile.d/kubectl
@@ -24,6 +24,7 @@ alias np="kubectl get networkpolicies"
 alias secrets="kubectl get secrets"
 alias services="kubectl get services"
 alias sa="kubectl get serviceaccounts"
+alias telnet="busybox-extras telnet"
 
 alias l='ls -CF'
 alias la='ls -A'
