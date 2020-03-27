@@ -6,6 +6,9 @@ RUN apk add --no-cache \
         bash bash-completion \
         jq ncurses sudo vim busybox-extras docker
 
+# Install GCloud default componant.
+RUN gcloud components install beta
+
 # Create a group and user devops
 RUN addgroup -S devops \
     && adduser -S devops -G devops -s /bin/bash \
