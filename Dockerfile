@@ -44,12 +44,6 @@ RUN wget -qO popeye.tar.gz https://github.com/derailed/popeye/releases/download/
     && tar -xzf popeye.tar.gz \
     && cp popeye /usr/local/bin/ 
     
-RUN chmod +x /usr/local/bin/* \
-    && kubectl completion bash > /etc/profile.d/kubectl \
-    && cd .. && rm -rf ${INSTALL_DIR}}
-
-RUN wget -qO /usr/local/bin/kube-ps1.sh https://raw.githubusercontent.com/jonmosco/kube-ps1/master/kube-ps1.sh
-
 ENV HELM2_VERSION 2.16.3
 RUN mkdir -p ./helm2 \
     && wget -qO ./helm2/helm2.tar.gz https://get.helm.sh/helm-v${HELM2_VERSION}-linux-amd64.tar.gz \
@@ -62,12 +56,14 @@ RUN mkdir -p ./helm3 \
     && tar -xzf ./helm3/helm3.tar.gz -C ./helm3/ \
     && cp ./helm3/linux-amd64/helm /usr/local/bin/helm3
 
+RUN chmod +x /usr/local/bin/* \
+    && kubectl completion bash > /etc/profile.d/kubectl \
+    && cd .. && rm -rf ${INSTALL_DIR}}
 
 RUN wget -qO /usr/local/bin/kube-ps1.sh https://raw.githubusercontent.com/jonmosco/kube-ps1/master/kube-ps1.sh
 
 COPY .bashrc /home/devops/
 RUN chown -R devops:devops /home/devops/
-
 
 USER devops
 
@@ -77,8 +73,8 @@ RUN cd /home/devops/ && curl -fsSLO "https://github.com/kubernetes-sigs/krew/rel
     && tar zxf krew.tar.gz \
     && KREW=./krew-"$(uname | tr '[:upper:]' '[:lower:]')_amd64" \
     && "$KREW" install --manifest=krew.yaml --archive=krew.tar.gz \
-    && "$KREW" update
-
+    && "$KREW" update \
+    && rm -rf *krew*
 
 WORKDIR /home/devops
 
