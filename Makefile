@@ -19,8 +19,8 @@ _CURRENT_USER:=$(shell whoami)
 _OS_ARG:=$(if $(filter-out darwin, $(UNAME_S)), "-D", "-d")
 DATE:=`date +'%Y%m%d-%H%M%S'`
 VERSION_MAJOR:=0
-VERSION_MINOR:=5
-VERSION_PATCH:=1
+VERSION_MINOR:=6
+VERSION_PATCH:=0
 VERSION=$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)
 
 ##############################
