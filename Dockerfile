@@ -4,7 +4,7 @@ FROM google/cloud-sdk:283.0.0-alpine
 RUN apk add --no-cache \
         git make curl wget \
         bash bash-completion \
-        jq ncurses sudo vim mysql-client busybox-extras
+        jq ncurses sudo vim busybox-extras docker
 
 # Create a group and user devops
 RUN addgroup -S devops \
@@ -63,16 +63,9 @@ RUN mkdir -p ./helm3 \
     && cp ./helm3/linux-amd64/helm /usr/local/bin/helm3
 
 
-#MSSQL client
-# exemple : sqlcmd -S 127.0.0.1 -U sa -P MyPassword100 > select @@version > go
-RUN curl -O https://download.microsoft.com/download/e/4/e/e4e67866-dffd-428c-aac7-8d28ddafb39b/msodbcsql17_17.5.2.1-1_amd64.apk \
-    && curl -O https://download.microsoft.com/download/e/4/e/e4e67866-dffd-428c-aac7-8d28ddafb39b/mssql-tools_17.5.2.1-1_amd64.apk \
-    && curl https://packages.microsoft.com/keys/microsoft.asc  | gpg --import - \
-    && apk add --allow-untrusted msodbcsql17_17.5.2.1-1_amd64.apk \
-    && apk add --allow-untrusted mssql-tools_17.5.2.1-1_amd64.apk
+RUN wget -qO /usr/local/bin/kube-ps1.sh https://raw.githubusercontent.com/jonmosco/kube-ps1/master/kube-ps1.sh
 
 COPY .bashrc /home/devops/
-COPY config/vim/vimrc /home/devops/.vimrc
 RUN chown -R devops:devops /home/devops/
 
 
@@ -86,9 +79,6 @@ RUN cd /home/devops/ && curl -fsSLO "https://github.com/kubernetes-sigs/krew/rel
     && "$KREW" install --manifest=krew.yaml --archive=krew.tar.gz \
     && "$KREW" update
 
-#Vim IDE
-RUN mkdir /home/devops/.vim && git clone https://github.com/gmarik/Vundle.vim.git /home/devops/.vim/bundle/Vundle.vim \
-    && vim "+:PluginInstall" "+:qa!"
 
 WORKDIR /home/devops
 

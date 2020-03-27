@@ -58,21 +58,6 @@ image-prompt:
 	$(eval ENV_ARGS=$(ENV_ARGS) --hostname kdt-$(DATE))
 	@docker run -it --rm $(ENV_ARGS) $(IMAGE_NAME):$(VERSION)		
 
-env-build:
-	$(info Build docker environment)
-	@docker-compose up -d $(SHELL_DEBUG)
-	@docker-compose down $(SHELL_DEBUG)
-	
-env-attach:
-	$(info Attach docker environment)
-	$(eval ENV_ARGS=$(ENV_ARGS) -v k8s-devops-toolkit_kube:/home/devops/.kube:Z)
-	$(eval ENV_ARGS=$(ENV_ARGS) --service-ports)
-	@docker-compose run $(ENV_ARGS) kdt-machine 
-
-env-remove:
-	$(info Remove docker environment)
-	@docker-compose down -v --rmi all $(SHELL_DEBUG)
-
 publish:
 	$(info Publish new version $(VERSION))
 	$(info - set tags)
