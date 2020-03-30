@@ -14,8 +14,8 @@ All needed tools for a gentle Dev-Ops
       - [Other](#other)
       - [Publishing](#publishing)
       - [Global parameters](#global-parameters)
-   * List of container alias
-- Advanced usage
+   * [List of container alias](#list-of-container-alias)
+- [Advanced usage](#advanced-usage)
 - [Contribute](#contribute)
 
 ## Install
@@ -26,10 +26,10 @@ All needed tools for a gentle Dev-Ops
    commands, launch one of those lines, depending of your shell.
    ```bash
    # For ZSH
-   echo "alias kdt=\`$(make image-print-alias)\`" >> ~/.zshrc
+   echo "alias kdt=\"$(make print-alias)\"" >> ~/.zshrc
 
    # For Bash
-   echo "alias kdt=\`$(make image-print-alias)\`" >> ~/.bashrc
+   echo "alias kdt=\"$(make print-alias)\"" >> ~/.bashrc
    ```  
 
 3. [Build](#build-image) your image and [configure](#configuration) your Kubernetes clusters
@@ -61,11 +61,11 @@ To start a container with all tools
 
 ```bash
 # Into the the project folder
-make image-attach [FOLDER=<folder-path-to-mount>] [PORT=<port-number>] [DEBUG=false|*]
+make attach [FOLDER=<folder-path-to-mount>] [PORT=<port-number>] [DEBUG=false|*]
 
 # From everywhere with the alias
 ## FOLDER parameter is automaticaly set with 'kdt' alias with the current folder
-kdt image-attach [PORT=<port-number>] [DEBUG=false|*]
+kdt attach [PORT=<port-number>] [DEBUG=false|*]
 ```
 
 [Top](#summary)

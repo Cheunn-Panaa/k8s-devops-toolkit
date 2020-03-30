@@ -10,6 +10,7 @@ source /etc/profile.d/kubectx
 source /usr/local/bin/kube-ps1.sh 
 
 alias gci="gcloud beta interactive"
+
 alias k="kubectl"
 alias kc="kubectl"
 alias kx="kubectx"
