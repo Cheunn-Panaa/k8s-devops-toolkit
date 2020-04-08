@@ -1,10 +1,12 @@
 FROM google/cloud-sdk:286.0.0-alpine
 
 # Install basic elements.
-RUN apk add --no-cache \
+RUN apk update && apk add --no-cache \
         git make curl wget \
         bash bash-completion \
-        jq ncurses sudo vim busybox-extras docker
+        jq ncurses sudo vim busybox-extras docker 
+
+RUN apk add bat --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing
 
 # Install GCloud default componant.
 RUN gcloud components install beta
@@ -67,8 +69,8 @@ RUN chmod +x /usr/local/bin/* \
 RUN wget -qO /usr/local/bin/kube-ps1.sh https://raw.githubusercontent.com/jonmosco/kube-ps1/master/kube-ps1.sh
 
 COPY .bashrc /home/devops/
-RUN chown -R devops:devops /home/devops/
-
+RUN chown -R devops:devops /home/devops/ 
+WORKDIR /home/devops
 USER devops
 
 # install krew
@@ -80,7 +82,4 @@ RUN cd /home/devops/ && curl -fsSLO "https://github.com/kubernetes-sigs/krew/rel
     && "$KREW" update \
     && rm -rf *krew*
 
-WORKDIR /home/devops
-
 CMD [ "/bin/bash" ]
-
