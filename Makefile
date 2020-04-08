@@ -16,7 +16,7 @@
 ##############################
 _TITLE:=H4sIAD43fV4AA3VQ2w2EMAz77xQe4wY4PhBIPQnErxfx8NAkfQC6qoocx07SgnYAsCJPjYkwlIxHkiuEAJAs9SAqmFqyq2JjU/Np643KRC/RbT7IO+mvTWXJxhQbm62tdBeN01htY+0BJFrsjWK1JP8kIcCl6yDecmeuTAmvs3w2fKcj/zbsOa/LvJ8yr90opQEAAA==
 _CURRENT_USER:=$(shell whoami)
-_OS_ARG:=$(if $(filter-out darwin, $(UNAME_S)), "-D", "-d")
+_OS_ARG:=$(shell base64 --help| grep 'decode' | cut -d, -f1 | awk '{$$1=$$1};1' | cut -c1-2)
 DATE:=`date +'%Y%m%d-%H%M%S'`
 VERSION_MAJOR:=0
 VERSION_MINOR:=6

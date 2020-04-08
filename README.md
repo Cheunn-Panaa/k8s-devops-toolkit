@@ -165,6 +165,7 @@ kx production=gke_kogus-production_europe-west1_pkub
  - **la** : ls -A
  - **ll** : ls -alF
  - **ls** : ls --color=auto
+ - **bat** : cat with wings and syntax highlighting, for yaml, md ...
 
 [Top](#summary)
 
