@@ -28,10 +28,10 @@ All needed tools for a gentle Dev-Ops
    commands, launch one of those lines, depending of your shell.
    ```bash
    # For ZSH
-   echo "alias kdt=\"$(make print-alias)\"" >> ~/.zshrc
+   echo "alias kdt=\"`make print-alias`\"" >> ~/.zshrc
 
    # For Bash
-   echo "alias kdt=\"$(make print-alias)\"" >> ~/.bashrc
+   echo "alias kdt=\"`make print-alias`\"" >> ~/.bashrc
    ```  
 
 3. [Build](#build-image) your image and [configure](#configuration) your Kubernetes clusters
