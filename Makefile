@@ -60,6 +60,8 @@ GIT_MODIFICATION?=$(git diff-index --quiet HEAD -- || true);
 FOLDER?=
 DEBUG:=false
 PORT:=false
+NETWORK:=false
+HOSTNAME:=kdt-$(DATE)
 DOCKER:=false
 SHELL_DEBUG?=
 
@@ -119,10 +121,13 @@ attach:										##@Commands Start a container of image KDT in interactive mode
 ifneq ($(PORT),false)
 	$(eval ENV_ARGS= $(ENV_ARGS) -p $(PORT):$(PORT))
 endif
+ifneq ($(NETWORK),false)
+	$(eval ENV_ARGS= $(ENV_ARGS) --network="$(NETWORK)" )
+endif
 	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.kube-kdt:/home/devops/.kube:Z)
 	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.gcloud-kdt:/home/devops/.config/gcloud:Z)
 	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.history-kdt:/home/devops/.bash_history:Z)	
-	$(eval ENV_ARGS=$(ENV_ARGS) --hostname kdt-$(DATE))
+	$(eval ENV_ARGS=$(ENV_ARGS) --hostname $(HOSTNAME))
 	@docker run -it $(ENV_ARGS) $(IMAGE_NAME):$(VERSION)
 
 #- VERSIONNING & PUBLISHING TASKS
