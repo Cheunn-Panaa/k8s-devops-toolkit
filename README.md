@@ -1,7 +1,9 @@
 # k8s-devops-toolkit
+
 All needed tools for a gentle Dev-Ops
 
 #### Summary
+
 - [Install](#install)
 - [Usages](#usages)
    * [Build Image](#build-image)
@@ -33,7 +35,7 @@ All needed tools for a gentle Dev-Ops
    ```  
 
 3. [Build](#build-image) your image and [configure](#configuration) your Kubernetes clusters
- 
+
 [Top](#summary)
 
 ## Usages
@@ -144,6 +146,7 @@ kx production=gke_kogus-production_europe-west1_pkub
 **Kube**
  - **k**, **kc** : kubectl
  - **ke** : kubectl exec -it
+ - **kpf** : kubectl port-forward --address=0.0.0.0  
  - **logs** : kubectl logs
  - **nodes** : kubectl get nodes
  - **pods** : kubectl get pods

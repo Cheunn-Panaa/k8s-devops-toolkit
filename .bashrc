@@ -17,6 +17,7 @@ alias kx="kubectx"
 alias kn="kubens"
 alias ke="kubectl exec -it"
 alias kp="kubeon"
+alias kpf="kubectl port-forward --address=0.0.0.0"
 alias nokp="kubeoff"
 alias logs="kubectl logs"
 alias nodes="kubectl get nodes"
@@ -36,5 +37,6 @@ alias ls='ls --color=auto'
 
 complete -F __start_kubectl k
 complete -F __start_kubectl kc
+complete -F __start_kubectl kpf
 complete -F _kube_namespaces kn
 complete -F _kube_contexts kx
