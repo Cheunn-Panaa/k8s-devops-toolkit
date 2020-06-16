@@ -58,6 +58,7 @@ IMAGE_NAME?=dolmen/kdt
 BUMP_TYPE?=
 GIT_MODIFICATION?=$(git diff-index --quiet HEAD -- || true);
 FOLDER?=
+AS_ROOT:=false
 DEBUG:=false
 PORT:=false
 NETWORK:=false
@@ -118,6 +119,9 @@ remove: .splash						##@Commands Remove local docker image of KDT
 a: attach
 attach:										##@Commands Start a container of image KDT in interactive mode
 	$(info Attach docker image $(IMAGE_NAME):$(VERSION))
+ifneq ($(AS_ROOT),false)
+	$(eval ENV_ARGS= $(ENV_ARGS) -u root)
+endif
 ifneq ($(PORT),false)
 	$(eval ENV_ARGS= $(ENV_ARGS) -p $(PORT):$(PORT))
 endif
