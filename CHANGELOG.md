@@ -37,8 +37,5 @@ et le projet suit les pratiques [Semantic Versioning](https://semver.org/spec/v2
 
 ### Security
 
-## Compare
-
-
 [Unreleased]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/v0.7.1...master
 [0.7.1]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/v0.7.0...v0.7.1
