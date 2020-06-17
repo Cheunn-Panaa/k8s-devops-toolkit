@@ -19,4 +19,4 @@ et le projet suit les pratiques [Semantic Versioning](https://semver.org/spec/v2
 
 ### Security
 
-[Unreleased]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit
+
