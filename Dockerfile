@@ -27,15 +27,18 @@ RUN wget -qO /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-re
     && chmod +x /usr/local/bin/* \
     && kubectl completion bash > /etc/profile.d/kubectl 
 
-ENV KUBECTX_VERSION 0.8.0
-RUN wget -qO kubectx.tar.gz https://github.com/ahmetb/kubectx/archive/v${KUBECTX_VERSION}.tar.gz \
-    && tar -xzf kubectx.tar.gz \
-    && cp kubectx-${KUBECTX_VERSION}/completion/kubectx.bash /etc/profile.d/kubectx \
-    && cp kubectx-${KUBECTX_VERSION}/completion/kubens.bash /etc/profile.d/kubens \
-    && cp kubectx-${KUBECTX_VERSION}/kubectx /usr/local/bin/ \
-    && cp kubectx-${KUBECTX_VERSION}/kubens /usr/local/bin/ 
+ENV KUBECTX_VERSION 0.9.0
+RUN wget https://github.com/ahmetb/kubectx/releases/download/v${KUBECTX_VERSION}/kubectx_v${KUBECTX_VERSION}_linux_x86_64.tar.gz \
+    && wget https://github.com/ahmetb/kubectx/releases/download/v${KUBECTX_VERSION}/kubens_v${KUBECTX_VERSION}_linux_x86_64.tar.gz \
+    && wget https://raw.githubusercontent.com/ahmetb/kubectx/v${KUBECTX_VERSION}/completion/kubectx.bash \
+    && wget https://raw.githubusercontent.com/ahmetb/kubectx/v${KUBECTX_VERSION}/completion/kubens.bash \
+    && tar -xzf kubectx_v${KUBECTX_VERSION}_linux_x86_64.tar.gz \
+    && tar -xzf kubens_v${KUBECTX_VERSION}_linux_x86_64.tar.gz \
+    && mv kubectx.bash /etc/profile.d/kubectx \
+    && mv kubens.bash /etc/profile.d/kubens \
+    && mv kubectx /usr/local/bin/ \
+    && mv kubens /usr/local/bin/
 
-ENV K9S_VERSION 0.18.1
 RUN wget -qO k9s.tar.gz https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_x86_64.tar.gz \
     && tar -xzf k9s.tar.gz \
     && cp k9s /usr/local/bin/
