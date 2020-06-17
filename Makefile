@@ -134,6 +134,9 @@ endif
 ifneq ($(NETWORK),false)
 	$(eval ENV_ARGS= $(ENV_ARGS) --network="$(NETWORK)" )
 endif
+ifeq (,$(wildcard $(HOME)/.history-kdt))
+	$(shell touch $(HOME)/.history-kdt)
+endif
 	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.kube-kdt:/home/devops/.kube:Z)
 	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.gcloud-kdt:/home/devops/.config/gcloud:Z)
 	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.history-kdt:/home/devops/.bash_history:Z)	
