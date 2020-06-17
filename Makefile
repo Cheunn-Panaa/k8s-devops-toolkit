@@ -117,6 +117,11 @@ remove: .splash						##@Commands Remove local docker image of KDT
 	$(info Remove docker image $(IMAGE_NAME):$(VERSION))
 	@docker rmi -f "$(IMAGE_NAME):$(VERSION)" $(SHELL_DEBUG)
 
+clean: .splash						##@Commands Remove other images of KDT
+	$(info Clean other versions)
+	$(eval IMG_TO_RM=$(foreach tag,$(shell docker images $(IMAGE_NAME) --format "{{.Tag}}"),$(if $(filter-out $(tag),$(VERSION)),$(IMAGE_NAME):$(tag))))
+	@docker rmi -f $(IMG_TO_RM) $(SHELL_DEBUG)
+
 a: attach
 attach:										##@Commands Start a container of image KDT in interactive mode
 	$(info Attach docker image $(IMAGE_NAME):$(VERSION))
