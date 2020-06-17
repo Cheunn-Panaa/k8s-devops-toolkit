@@ -50,7 +50,7 @@ RUN wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download
 ENV STERN_VERSION 1.11.0
 RUN wget -qO /usr/local/bin/stern https://github.com/wercker/stern/releases/download/${STERN_VERSION}/stern_linux_amd64
 
-ENV POPEYE_VERSION 0.7.1
+ENV POPEYE_VERSION 0.8.6
 RUN wget -qO popeye.tar.gz https://github.com/derailed/popeye/releases/download/v${POPEYE_VERSION}/popeye_Linux_x86_64.tar.gz \
     && tar -xzf popeye.tar.gz \
     && cp popeye /usr/local/bin/ 
