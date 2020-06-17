@@ -21,7 +21,7 @@ DATE:=`date +'%Y%m%d-%H%M%S'`
 VERSION_MAJOR:=0
 VERSION_MINOR:=7
 VERSION_PATCH:=0
-VERSION=$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)
+VERSION?=$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)
 .DEFAULT_GOAL := attach
 
 ##############################
@@ -192,7 +192,12 @@ endif
 	@sed -i.bak -E 's@^VERSION_MAJOR:=.+@VERSION_MAJOR:=$(VERSION_MAJOR)@g' ./Makefile
 	
 	$(info - Make changelog)
-	@$(MAKE) .changelog
+	@$(MAKE) .changelog-list VERSION="$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)" $(SHELL_DEBUG) > .tmp-comments.bak
+	@sed -i.bak -E "/## \[Unreleased\]/r .tmp-comments.bak" CHANGELOG.md
+	@$(MAKE) .changelog-compare VERSION="$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)" $(SHELL_DEBUG) > .tmp-comments.bak
+	@sed -i.bak -E "/\[Unreleased\]:.*/r .tmp-comments.bak" CHANGELOG.md
+	@awk '!p{p=sub(/\[Unreleased\]:.*/,x)}1' CHANGELOG.md > CHANGELOG.md.bak && rm CHANGELOG.md && mv CHANGELOG.md.bak CHANGELOG.md
+
 	
 	$(info - Save git modifications)
 	@git add Makefile $(SHELL_DEBUG)
@@ -209,6 +214,20 @@ endif
 
 help: .splash					##@Other Display this help
 	@perl -e '$(HELP_FUN)' $(MAKEFILE_LIST)
+
+print-alias: 					##@Other Print shortcut command for your alias file
+	@echo "make -f $(CURDIR)/Makefile FOLDER=\\\`pwd\\\`"
+
+version: .splash			##@Other Get the current version
+##############################
+# PRIVATE TASKS
+##############################
+.prompt-yesno:
+	@echo "$(message)? [y/N] " && read ans && [ $${ans:-N} = y ]
+
+.splash: 
+	$(call _SPLASH)
+
 
 .changelog-list: 
 	$(eval _GIT_LAST_TAG=$(shell git describe --tags --abbrev=0))
@@ -235,23 +254,3 @@ help: .splash					##@Other Display this help
 	$(eval _GIT_LAST_TAG=$(shell git describe --tags --abbrev=0))
 	@echo "[Unreleased]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/v$(VERSION)...HEAD"
 	@echo "[$(VERSION)]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/$(_GIT_LAST_TAG)...v$(VERSION)"
-
-.changelog:
-	@$(MAKE) .changelog-list > .tmp-comments.bak
-	@sed -i.bak -E "/## \[Unreleased\]/r .tmp-comments" CHANGELOG.md
-	@$(MAKE) .changelog-compare > .tmp-comments.bak
-	@sed -i.bak -E "/\[Unreleased\]:.*/r .tmp-comments" CHANGELOG.md
-	@awk '!p{p=sub(/\[Unreleased\]:.*/,x)}1' CHANGELOG.md > CHANGELOG.md.bak && rm CHANGELOG.md && mv CHANGELOG.md.bak CHANGELOG.md
-
-print-alias: 					##@Other Print shortcut command for your alias file
-	@echo "make -f $(CURDIR)/Makefile FOLDER=\\\`pwd\\\`"
-
-version: .splash			##@Other Get the current version
-##############################
-# PRIVATE TASKS
-##############################
-.prompt-yesno:
-	@echo "$(message)? [y/N] " && read ans && [ $${ans:-N} = y ]
-
-.splash: 
-	$(call _SPLASH)
