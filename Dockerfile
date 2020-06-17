@@ -44,7 +44,7 @@ RUN wget -qO k9s.tar.gz https://github.com/derailed/k9s/releases/download/v${K9S
     && tar -xzf k9s.tar.gz \
     && cp k9s /usr/local/bin/
 
-ENV YQ_VERSION 3.2.1
+ENV YQ_VERSION 3.3.2
 RUN wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64
 
 ENV STERN_VERSION 1.11.0
