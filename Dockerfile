@@ -1,4 +1,5 @@
-FROM google/cloud-sdk:286.0.0-alpine
+FROM google/cloud-sdk:296.0.1-alpine
+
 
 # Install basic elements.
 RUN apk update && apk add --no-cache \
