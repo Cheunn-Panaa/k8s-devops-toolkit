@@ -66,6 +66,8 @@ NETWORK:=false
 HOSTNAME:=kdt-$(DATE)
 DOCKER:=false
 SHELL_DEBUG?=
+CMD?=
+QUIET?=
 
 ENV_ARGS := --rm --name "kdt-$(DATE)"
 ifneq ($(FOLDER),)
@@ -129,7 +131,9 @@ clean: .splash						##@Commands Remove other images of KDT
 
 a: attach
 attach:										##@Commands Start a container of image KDT in interactive mode
+ifeq ($(QUIET),)
 	$(info Attach docker image $(IMAGE_NAME):$(VERSION))
+endif
 ifneq ($(AS_ROOT),false)
 	$(eval ENV_ARGS= $(ENV_ARGS) -u root)
 endif
@@ -146,7 +150,7 @@ endif
 	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.gcloud-kdt:/home/devops/.config/gcloud:Z)
 	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.history-kdt:/home/devops/.bash_history:Z)	
 	$(eval ENV_ARGS=$(ENV_ARGS) --hostname $(HOSTNAME))
-	@docker run -it $(ENV_ARGS) $(IMAGE_NAME):$(VERSION)
+	@docker run -it $(ENV_ARGS) $(IMAGE_NAME):$(VERSION) $(CMD)
 
 #- VERSIONNING & PUBLISHING TASKS
 .PHONY: publish version-bump
