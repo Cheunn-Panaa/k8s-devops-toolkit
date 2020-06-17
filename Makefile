@@ -252,5 +252,5 @@ version: .splash			##@Other Get the current version
 
 .changelog-compare:
 	$(eval _GIT_LAST_TAG=$(shell git describe --tags --abbrev=0))
-	@echo "[Unreleased]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/v$(VERSION)...HEAD"
+	@echo "[Unreleased]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/v$(VERSION)...master"
 	@echo "[$(VERSION)]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/$(_GIT_LAST_TAG)...v$(VERSION)"
