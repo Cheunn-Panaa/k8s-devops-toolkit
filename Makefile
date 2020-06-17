@@ -80,6 +80,11 @@ ifeq ($(DEBUG), false)
 	SHELL_DEBUG := > /dev/null 2>&1
 endif
 
+define newline
+
+
+endef
+
 HELP_FUN = \
     %help; \
     while(<>) { push @{$$help{$$2 // 'options'}}, [$$1, $$3] if /^([a-zA-Z\-]+)\s*:.*\#\#(?:@([a-zA-Z\-]+))?\s(.*)$$/ }; \
@@ -107,7 +112,7 @@ endef
 ##############################
 # TASKS
 ##############################
-.PHONY: build remove attach a 
+.PHONY: build remove attach a change-log
 #- DOCKER TASKS
 build: .splash						##@Commands Build local docker image of KDT
 	$(info Build docker image $(IMAGE_NAME):$(VERSION))
@@ -185,9 +190,13 @@ endif
 	@sed -i.bak -E 's@^VERSION_PATCH:=.+@VERSION_PATCH:=$(VERSION_PATCH)@g' ./Makefile
 	@sed -i.bak -E 's@^VERSION_MINOR:=.+@VERSION_MINOR:=$(VERSION_MINOR)@g' ./Makefile
 	@sed -i.bak -E 's@^VERSION_MAJOR:=.+@VERSION_MAJOR:=$(VERSION_MAJOR)@g' ./Makefile
-
-	$(info - Make git modifications)
+	
+	$(info - Make changelog)
+	@$(MAKE) .changelog
+	
+	$(info - Save git modifications)
 	@git add Makefile $(SHELL_DEBUG)
+	@git add CHANGELOG.md $(SHELL_DEBUG)
 	@git commit -m "v$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)" $(SHELL_DEBUG)
 	@git tag v$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH) $(SHELL_DEBUG)
 
@@ -201,6 +210,38 @@ endif
 help: .splash					##@Other Display this help
 	@perl -e '$(HELP_FUN)' $(MAKEFILE_LIST)
 
+.changelog-list: 
+	$(eval _GIT_LAST_TAG=$(shell git describe --tags --abbrev=0))
+	@echo
+	@echo "### Added"
+	@echo
+	@echo "### Changed"
+	@echo
+	@echo "### Deprecated"
+	@echo
+	@echo "### Removed"
+	@echo
+	@echo "### Fixed"
+	@echo
+	@echo "### Security"
+	@echo
+	@echo "## [$(VERSION)] - $(shell date +'%Y-%m-%d')"
+	@echo
+	@echo "### Commit comments" 
+	@echo
+	@echo - $(subst \n ,$(newline) @echo - ,$(subst ",‘,$(subst ',‘,$(shell git log $(_GIT_LAST_TAG)..HEAD --pretty=format:"%s\n"))))
+
+.changelog-compare:
+	$(eval _GIT_LAST_TAG=$(shell git describe --tags --abbrev=0))
+	@echo "[Unreleased]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/v$(VERSION)...HEAD"
+	@echo "[$(VERSION)]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/$(_GIT_LAST_TAG)...v$(VERSION)"
+
+.changelog:
+	@$(MAKE) .changelog-list > .tmp-comments.bak
+	@sed -i.bak -E "/## \[Unreleased\]/r .tmp-comments" CHANGELOG.md
+	@$(MAKE) .changelog-compare > .tmp-comments.bak
+	@sed -i.bak -E "/\[Unreleased\]:.*/r .tmp-comments" CHANGELOG.md
+	@awk '!p{p=sub(/\[Unreleased\]:.*/,x)}1' CHANGELOG.md > CHANGELOG.md.bak && rm CHANGELOG.md && mv CHANGELOG.md.bak CHANGELOG.md
 
 print-alias: 					##@Other Print shortcut command for your alias file
 	@echo "make -f $(CURDIR)/Makefile FOLDER=\\\`pwd\\\`"
