@@ -39,6 +39,7 @@ RUN wget https://github.com/ahmetb/kubectx/releases/download/v${KUBECTX_VERSION}
     && mv kubectx /usr/local/bin/ \
     && mv kubens /usr/local/bin/
 
+ENV K9S_VERSION 0.20.5
 RUN wget -qO k9s.tar.gz https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_x86_64.tar.gz \
     && tar -xzf k9s.tar.gz \
     && cp k9s /usr/local/bin/
