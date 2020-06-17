@@ -19,6 +19,26 @@ et le projet suit les pratiques [Semantic Versioning](https://semver.org/spec/v2
 
 ### Security
 
+## [0.7.2] - 2020-06-17
+
+### Commit comments
+
+- :zap: Ajout de la capacité d‘exécuter directement des commandes
+- :recycle: Suppression d‘éléments inutile dans le changelog
+- :bug: Correction de la comparaison dans le changelogn
+
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
 ## [0.7.1] - 2020-06-17
 
 ### Commit comments
@@ -37,5 +57,7 @@ et le projet suit les pratiques [Semantic Versioning](https://semver.org/spec/v2
 
 ### Security
 
-[Unreleased]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/v0.7.1...master
+
+[Unreleased]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/v0.7.2...master
+[0.7.2]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/v0.7.1...v0.7.2
 [0.7.1]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/v0.7.0...v0.7.1
