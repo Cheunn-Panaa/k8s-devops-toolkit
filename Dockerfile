@@ -21,7 +21,7 @@ RUN addgroup -S devops \
 ENV INSTALL_DIR /tmp/install
 RUN mkdir ${INSTALL_DIR} && cd ${INSTALL_DIR} 
 
-ENV KUBECTL_VERSION 1.18.0
+ENV KUBECTL_VERSION 1.18.3
 # STABLE VERSION: https://storage.googleapis.com/kubernetes-release/release/stable.txt
 RUN wget -qO /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
     && chmod +x /usr/local/bin/* \
