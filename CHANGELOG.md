@@ -19,6 +19,26 @@ et le projet suit les pratiques [Semantic Versioning](https://semver.org/spec/v2
 
 ### Security
 
+## [0.7.1] - 2020-06-17
+
+### Commit comments
+
+- :bug: Fix changelog updaten
+
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
 ## Compare
 
-[Unreleased]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit
+
+[Unreleased]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/v0.7.1...HEAD
+[0.7.1]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/v0.7.0...v0.7.1

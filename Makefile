@@ -20,7 +20,7 @@ _OS_ARG:=$(shell base64 --help| grep 'decode' | cut -d, -f1 | awk '{$$1=$$1};1' 
 DATE:=`date +'%Y%m%d-%H%M%S'`
 VERSION_MAJOR:=0
 VERSION_MINOR:=7
-VERSION_PATCH:=0
+VERSION_PATCH:=1
 VERSION?=$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)
 .DEFAULT_GOAL := attach
 
