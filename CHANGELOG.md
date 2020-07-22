@@ -11,6 +11,8 @@ et le projet suit les pratiques [Semantic Versioning](https://semver.org/spec/v2
 
 ### Changed
 
+- :pencil: Mise à jour de la documentation
+
 ### Deprecated
 
 ### Removed
