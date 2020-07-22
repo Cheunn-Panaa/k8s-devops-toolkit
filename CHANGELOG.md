@@ -18,6 +18,7 @@ et le projet suit les pratiques [Semantic Versioning](https://semver.org/spec/v2
 ### Removed
 
 - :wastebasket: Suppression de Krew
+- :wastebasket: Suppression de Google Command Interactive
 ### Fixed
 
 ### Security

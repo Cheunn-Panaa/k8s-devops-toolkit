@@ -8,10 +8,6 @@ RUN apk update && apk add --no-cache \
         jq ncurses sudo vim busybox-extras docker 
 
 RUN apk add bat --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing
-
-# Install GCloud default componant.
-RUN gcloud components install beta
-
 # Create a group and user devops
 RUN addgroup -S devops \
     && adduser -S devops -G devops -s /bin/bash \
