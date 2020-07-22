@@ -9,6 +9,7 @@ et le projet suit les pratiques [Semantic Versioning](https://semver.org/spec/v2
 
 ### Added
 
+- :sparkles: Ajout des profiles pour le build
 - :sparkles: Possibilité de monter plusieurs ports sur une même instance de KDT
 
 ### Changed

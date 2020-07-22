@@ -1,5 +1,7 @@
 FROM google/cloud-sdk:296.0.1-alpine
 
+ARG PROFILE
+ENV PROFILE ${PROFILE}
 
 # Install basic elements.
 RUN apk update && apk add --no-cache \
@@ -7,7 +9,6 @@ RUN apk update && apk add --no-cache \
         bash bash-completion \
         jq ncurses sudo vim busybox-extras docker 
 
-RUN apk add bat --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing
 # Create a group and user devops
 RUN addgroup -S devops \
     && adduser -S devops -G devops -s /bin/bash \
@@ -58,6 +59,44 @@ RUN curl -Lso popeye.tar.gz https://github.com/derailed/popeye/releases/download
     && tar -xzf popeye.tar.gz \
     && mv popeye /usr/local/bin/ \
     && rm -rf ./* 
+
+## FEATURE BAT
+# RUN apk add bat --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing
+## END FEATURE BAT
+
+## FEATURE HELM2
+# ENV HELM2_VERSION 2.16.3
+# RUN mkdir -p ./helm2 \
+#     && curl -Lso ./helm2/helm2.tar.gz https://get.helm.sh/helm-v${HELM2_VERSION}-linux-amd64.tar.gz \
+#     && tar -xzf ./helm2/helm2.tar.gz -C ./helm2/ \
+#     && cp ./helm2/linux-amd64/helm /usr/local/bin/helm2 \
+#     && rm -rf ./*
+## END FEATURE HELM2
+
+## FEATURE HELM3
+# ENV HELM3_VERSION 3.1.1
+# RUN mkdir -p ./helm3 \
+#     && curl -Lso ./helm3/helm3.tar.gz https://get.helm.sh/helm-v${HELM3_VERSION}-linux-amd64.tar.gz \
+#     && tar -xzf ./helm3/helm3.tar.gz -C ./helm3/ \
+#     && cp ./helm3/linux-amd64/helm /usr/local/bin/helm \
+#     && rm -rf ./*
+## END FEATURE HELM3
+
+## FEATURE KUSTOMIZE
+# ENV KUSTOMIZE_VERSION 3.6.1
+# RUN curl -Lso kustomize.tar.gz \
+#     "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz" \
+#     && tar -xzf kustomize.tar.gz \
+#     && chmod +x kustomize \
+#     && mv kustomize /usr/local/bin \
+#     && rm -rf ./*
+## END FEATURE KUSTOMIZE
+
+## FEATURE KOMPOSE
+# ENV KOMPOSE_VERSION 1.21.0
+# RUN curl -Lso /usr/local/bin/kompose "https://github.com/kubernetes/kompose/releases/download/v${KOMPOSE_VERSION}/kompose-linux-amd64" \
+#     && chmod +x /usr/local/bin/kompose 
+## END FEATURE KOMPOSE
 
 COPY .bashrc /home/devops/
 COPY .bashrc /root/

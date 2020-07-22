@@ -55,6 +55,7 @@ _IWHITE  := $(shell tput -Txterm setab 7)
 ##############################
 # PRIVATE VARS
 ##############################
+_OVERIDES_FILES:=Dockerfile .bashrc
 _OPT_SEP := ,
 
 ##############################
@@ -73,6 +74,7 @@ DOCKER:=false
 SHELL_DEBUG?=
 CMD?=
 QUIET?=
+PROFILE?=none
 
 ENV_ARGS := --rm --name "kdt-$(DATE)"
 ifneq ($(FOLDER),)
@@ -123,7 +125,14 @@ endef
 #- DOCKER TASKS
 build: .splash						##@Commands Build local docker image of KDT
 	$(info Build docker image $(IMAGE_NAME):$(VERSION))
-	@docker build -t "$(IMAGE_NAME):$(VERSION)" . $(SHELL_DEBUG)
+	$(if $(filter "$(PROFILE)", "none"), \
+		@echo "> No profile activated", \
+		$(call _APPLY_PROFILE) \
+	)
+	@docker build \
+		--build-arg PROFILE=$(PROFILE) \
+		-t "$(IMAGE_NAME):$(VERSION)" . $(SHELL_DEBUG)
+	@git checkout $(_OVERIDES_FILES) $(SHELL_DEBUG)
 
 remove: .splash						##@Commands Remove local docker image of KDT
 	$(info Remove docker image $(IMAGE_NAME):$(VERSION))
@@ -156,7 +165,7 @@ endif
 	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.gcloud-kdt:/home/devops/.config/gcloud:Z)
 	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.history-kdt:/home/devops/.bash_history:Z)	
 	$(eval ENV_ARGS=$(ENV_ARGS) --hostname $(HOSTNAME))
-	@docker run -it $(ENV_ARGS) $(IMAGE_NAME):$(VERSION) $(CMD)
+	@docker run --privileged -it $(ENV_ARGS) $(IMAGE_NAME):$(VERSION) $(CMD)
 
 #- VERSIONNING & PUBLISHING TASKS
 .PHONY: publish version-bump
@@ -264,3 +273,31 @@ version: .splash			##@Other Get the current version
 	$(eval _GIT_LAST_TAG=$(shell git describe --tags --abbrev=0))
 	@echo "[Unreleased]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/v$(VERSION)...master"
 	@echo "[$(VERSION)]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/$(_GIT_LAST_TAG)...v$(VERSION)"
+
+define _APPLY_PROFILE
+	@echo "> Apply profile '$(PROFILE)'"
+	@if [ ! -f "./profiles/$(PROFILE)" ]; then \
+		echo "-> Profile not exist in folder '$(shell pwd)/profiles'"; \
+		exit 2; \
+	 fi
+	$(foreach file,$(_OVERIDES_FILES),$(call _APPLY_PROFILE_TO_FILE,$(file))${newline})
+endef
+
+define _APPLY_PROFILE_TO_FILE
+	@echo "-> Modify file '$(1)'"
+	$(foreach feature,$(shell cat "./profiles/$(PROFILE)"),$(call _APPLY_FEATURE_TO_FILE,$(1),$(feature))${newline})
+endef
+
+define _APPLY_FEATURE_TO_FILE
+	@echo "--> Apply feature '$(2)' to file '$(1)'"
+	@export LINE_START="`grep -nr "## FEATURE $(2)" $(1) | cut -d : -f2`" \
+	&& export LINE_END="`grep -nr "## END FEATURE $(2)" $(1) | cut -d : -f2`" \
+	&& if [[ "$${LINE_START}" == "" ]]; then \
+			echo "---> Not Found"; \
+		 elif [[ "$${LINE_END}" == "" ]]; then \
+		 	echo "---> Malformed" ; \
+		 else \
+		 	sed -i.bak "$${LINE_START},$${LINE_END}s/# *//" $(1); \
+			echo "---> Activated" ; \
+		 fi	
+endef
