@@ -9,6 +9,8 @@ et le projet suit les pratiques [Semantic Versioning](https://semver.org/spec/v2
 
 ### Added
 
+- :sparkles: Possibilité de monter plusieurs ports sur une même instance de KDT
+
 ### Changed
 
 - :wastebasket: Netoyage d'éléments inutiles

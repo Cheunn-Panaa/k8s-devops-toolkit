@@ -53,6 +53,11 @@ _ICYAN   := $(shell tput -Txterm setab 6)
 _IWHITE  := $(shell tput -Txterm setab 7)
 
 ##############################
+# PRIVATE VARS
+##############################
+_OPT_SEP := ,
+
+##############################
 # APP VARS
 ##############################
 IMAGE_NAME?=dolmen/kdt
@@ -138,7 +143,8 @@ ifneq ($(AS_ROOT),false)
 	$(eval ENV_ARGS= $(ENV_ARGS) -u root)
 endif
 ifneq ($(PORT),false)
-	$(eval ENV_ARGS= $(ENV_ARGS) -p $(PORT):$(PORT))
+	$(eval PORTS= $(subst $(_OPT_SEP), ,$(PORT)))
+	$(foreach p, $(PORTS), $(eval ENV_ARGS= $(ENV_ARGS) -p $(p):$(p)))
 endif
 ifneq ($(NETWORK),false)
 	$(eval ENV_ARGS= $(ENV_ARGS) --network="$(NETWORK)" )
