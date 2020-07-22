@@ -19,8 +19,8 @@ _CURRENT_USER:=$(shell whoami)
 _OS_ARG:=$(shell base64 --help| grep 'decode' | cut -d, -f1 | awk '{$$1=$$1};1' | cut -c1-2)
 DATE:=`date +'%Y%m%d-%H%M%S'`
 VERSION_MAJOR:=0
-VERSION_MINOR:=7
-VERSION_PATCH:=2
+VERSION_MINOR:=8
+VERSION_PATCH:=0
 VERSION?=$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)
 .DEFAULT_GOAL:=attach
 

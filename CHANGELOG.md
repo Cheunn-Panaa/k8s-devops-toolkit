@@ -9,6 +9,30 @@ et le projet suit les pratiques [Semantic Versioning](https://semver.org/spec/v2
 
 ### Added
 
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [0.8.0] - 2020-07-22
+
+### Commit comments
+
+- :sparkles: Ajout des profiles pour le build
+- :sparkles: Possibilité de monter plusieurs ports sur une même instance de KDT
+- :wastebasket: Netoyage d‘éléments inutiles
+- :wastebasket: Suppression de wget
+- :wastebasket: Suppression de Google Command Interactive
+- :pencil: Mise à jour de la documentation
+- :wastebasket: Suppression de Krewn
+
+### Added
+
 - :sparkles: Ajout des profiles pour le build
 - :sparkles: Possibilité de monter plusieurs ports sur une même instance de KDT
 
@@ -67,6 +91,8 @@ et le projet suit les pratiques [Semantic Versioning](https://semver.org/spec/v2
 
 ### Security
 
-[Unreleased]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/v0.7.2...master
+
+[Unreleased]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/v0.8.0...master
+[0.8.0]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/v0.7.2...v0.8.0
 [0.7.2]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/v0.7.1...v0.7.2
 [0.7.1]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/v0.7.0...v0.7.1
