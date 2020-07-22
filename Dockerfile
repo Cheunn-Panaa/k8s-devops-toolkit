@@ -3,7 +3,7 @@ FROM google/cloud-sdk:296.0.1-alpine
 
 # Install basic elements.
 RUN apk update && apk add --no-cache \
-        git make curl wget \
+        git make curl \
         bash bash-completion \
         jq ncurses sudo vim busybox-extras docker 
 
