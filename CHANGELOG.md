@@ -21,6 +21,8 @@ et le projet suit les pratiques [Semantic Versioning](https://semver.org/spec/v2
 
 ### Fixed
 
+- :bug: Activation volume partagés avec le user Root quand celui-ci est actif.
+
 ### Security
 
 ## [0.8.0] - 2020-07-22

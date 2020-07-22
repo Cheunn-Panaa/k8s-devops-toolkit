@@ -151,6 +151,13 @@ ifeq ($(QUIET),)
 endif
 ifneq ($(AS_ROOT),false)
 	$(eval ENV_ARGS= $(ENV_ARGS) -u root)
+	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.kube-kdt:/root/.kube:Z)
+	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.gcloud-kdt:/root/.config/gcloud:Z)
+	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.history-kdt:/root/.bash_history:Z)	
+else
+	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.kube-kdt:/home/devops/.kube:Z)
+	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.gcloud-kdt:/home/devops/.config/gcloud:Z)
+	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.history-kdt:/home/devops/.bash_history:Z)	
 endif
 ifneq ($(PORT),false)
 	$(eval PORTS= $(subst $(_OPT_SEP), ,$(PORT)))
@@ -162,9 +169,6 @@ endif
 ifeq (,$(wildcard $(HOME)/.history-kdt))
 	$(shell touch $(HOME)/.history-kdt)
 endif
-	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.kube-kdt:/home/devops/.kube:Z)
-	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.gcloud-kdt:/home/devops/.config/gcloud:Z)
-	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.history-kdt:/home/devops/.bash_history:Z)	
 	$(eval ENV_ARGS=$(ENV_ARGS) --hostname $(HOSTNAME))
 	@docker run --privileged -it $(ENV_ARGS) $(IMAGE_NAME):$(VERSION) $(CMD)
 
