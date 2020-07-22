@@ -46,6 +46,11 @@ complete -F __start_kubectl kc
 complete -F _kube_namespaces kn
 complete -F _kube_contexts kx
 
+# Clean all stoped docker container
+alias dcc="docker ps -a | grep Exit | cut -d ' ' -f 1 | xargs docker rm"
+# Clean all none docker images
+alias dci="docker images | grep '<none>' | sed -e's/  */ /g' |  cut -d ' ' -f 3 | xargs docker rmi"
+
 ## FEATURE BAT
 # alias bat="bat --paging never"
 ## END FEATURE BAT

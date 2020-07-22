@@ -9,6 +9,8 @@ et le projet suit les pratiques [Semantic Versioning](https://semver.org/spec/v2
 
 ### Added
 
+- :heavy_plus_sign: Ajout des alias docker dcc et dci pour le nettoyage de docker.
+
 ### Changed
 
 ### Deprecated
