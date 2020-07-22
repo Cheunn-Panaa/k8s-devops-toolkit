@@ -22,7 +22,7 @@ VERSION_MAJOR:=0
 VERSION_MINOR:=7
 VERSION_PATCH:=2
 VERSION?=$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)
-.DEFAULT_GOAL := attach
+.DEFAULT_GOAL:=attach
 
 ##############################
 # TYPO
@@ -223,6 +223,7 @@ print-alias: 					##@Other Print shortcut command for your alias file
 	@echo "make -f $(CURDIR)/Makefile FOLDER=\\\`pwd\\\`"
 
 version: .splash			##@Other Get the current version
+
 ##############################
 # PRIVATE TASKS
 ##############################
@@ -231,7 +232,6 @@ version: .splash			##@Other Get the current version
 
 .splash: 
 	$(call _SPLASH)
-
 
 .changelog-list: 
 	$(eval _GIT_LAST_TAG=$(shell git describe --tags --abbrev=0))

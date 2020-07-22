@@ -11,6 +11,7 @@ et le projet suit les pratiques [Semantic Versioning](https://semver.org/spec/v2
 
 ### Changed
 
+- :wastebasket: Netoyage d'éléments inutiles
 - :pencil: Mise à jour de la documentation
 
 ### Deprecated
@@ -62,7 +63,6 @@ et le projet suit les pratiques [Semantic Versioning](https://semver.org/spec/v2
 ### Fixed
 
 ### Security
-
 
 [Unreleased]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/v0.7.2...master
 [0.7.2]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/v0.7.1...v0.7.2
