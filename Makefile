@@ -83,6 +83,7 @@ endif
 
 ifneq ($(DOCKER),false)
 	ENV_ARGS := $(ENV_ARGS) -v /var/run/docker.sock:/var/run/docker.sock:rw
+	AS_ROOT := true
 endif
 
 ifeq ($(DEBUG), false)
