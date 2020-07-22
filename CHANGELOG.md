@@ -15,6 +15,7 @@ et le projet suit les pratiques [Semantic Versioning](https://semver.org/spec/v2
 
 ### Removed
 
+- :wastebasket: Suppression de Krew
 ### Fixed
 
 ### Security

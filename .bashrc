@@ -1,7 +1,6 @@
 export HISTTIMEFORMAT="%d/%m/%y %T "
 #export PS1='\u@\h:\W \$ '
 export PS1='\u@\h \W $(kube_ps1)\$ '
-export PATH="${KREW_ROOT:-$HOME/.krew}/bin:${HOME}/.kube/bin:$PATH"
 
 source /etc/profile.d/bash_completion.sh
 source /etc/profile.d/kubectl

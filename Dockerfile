@@ -78,13 +78,4 @@ RUN chown -R devops:devops /home/devops/
 WORKDIR /home/devops
 USER devops
 
-# install krew
-ENV KREW_VERSION 0.3.4
-RUN cd /home/devops/ && curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/download/v${KREW_VERSION}/krew.{tar.gz,yaml}" \
-    && tar zxf krew.tar.gz \
-    && KREW=./krew-"$(uname | tr '[:upper:]' '[:lower:]')_amd64" \
-    && "$KREW" install --manifest=krew.yaml --archive=krew.tar.gz \
-    && "$KREW" update \
-    && rm -rf *krew*
-
 CMD [ "/bin/bash" ]
