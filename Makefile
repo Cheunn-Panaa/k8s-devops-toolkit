@@ -136,7 +136,7 @@ clean: .splash						##@Commands Remove other images of KDT
 	@docker rmi -f $(IMG_TO_RM) $(SHELL_DEBUG)
 
 a: attach
-attach:										##@Commands Start a container of image KDT in interactive mode
+attach:	.splash						##@Commands Start a container of image KDT in interactive mode
 ifeq ($(QUIET),)
 	$(info Attach docker image $(IMAGE_NAME):$(VERSION))
 endif
@@ -272,8 +272,10 @@ version: .splash			##@Other Get the current version
 .prompt-yesno:
 	@echo "$(message)? [y/N] " && read ans && [ $${ans:-N} = y ]
 
-.splash: 
+.splash:
+ifeq ($(QUIET),)
 	$(call _SPLASH)
+endif
 
 .changelog-list: 
 	$(eval _GIT_LAST_TAG=$(shell git describe --tags --abbrev=0))
