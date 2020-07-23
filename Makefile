@@ -191,11 +191,11 @@ ifeq ($(QUIET),)
 	$(info - Start KDT updates to $(LAST_TAG))
 endif
 	@git checkout tags/$(LAST_TAG) > /dev/null
-	@$(MAKE) build QUIET=1 DEBUG=$(DEBUG)
+	@$(MAKE) build VERSION=$(LAST_TAG) QUIET=1 DEBUG=$(DEBUG)
 ifeq ($(QUIET),)
 	$(info - Clean previous versions)
 endif
-	@$(MAKE) clean QUIET=1 DEBUG=$(DEBUG)
+	@$(MAKE) clean VERSION=$(LAST_TAG) QUIET=1 DEBUG=$(DEBUG)
 
 publish: .splash					##@Publishing Publish images into the registry
 	$(info Publish new version $(VERSION))
