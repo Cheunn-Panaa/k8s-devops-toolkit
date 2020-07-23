@@ -75,7 +75,7 @@ DOCKER:=false
 CMD:=false
 SHELL_DEBUG?=
 QUIET?=
-PROFILE?=none
+PROFILE?=$(if $(wildcard ./.profile),none,$(shell cat ./.profile))
 
 ifeq ($(DEBUG), false)
 	SHELL_DEBUG := > /dev/null 2>&1
@@ -305,6 +305,7 @@ endif
 
 define _APPLY_PROFILE
 	@echo "> Apply profile '$(PROFILE)'"
+	@echo "$(PROFILE)" > ./.profile
 	@if [ ! -f "./profiles/$(PROFILE)" ]; then \
 		echo "-> Profile not exist in folder '$(shell pwd)/profiles'"; \
 		exit 2; \

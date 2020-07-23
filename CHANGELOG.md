@@ -11,6 +11,7 @@ et le projet suit les pratiques [Semantic Versioning](https://semver.org/spec/v2
 
 - :heavy_plus_sign: Ajout des alias docker dcc et dci pour le nettoyage de docker.
 - :heavy_plus_sign: Ajout de la commande upgrade pour la mise à jour automatique.
+- :sparkles: Ajout de la sauvegarde du profile sélectionné.
 
 ### Changed
 
