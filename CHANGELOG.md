@@ -13,7 +13,8 @@ et le projet suit les pratiques [Semantic Versioning](https://semver.org/spec/v2
 
 ### Changed
 
-- :zap: Si option `DOCKER` actif l'option `AS_ROOT` est automatiquement actif aussi. 
+- :zap: Si option `DOCKER` actif l'option `AS_ROOT` est automatiquement actif aussi.
+- :zap: Auto inclusion de `/bin/bash -ic ` quand CMD est invoqué.
 
 ### Deprecated
 

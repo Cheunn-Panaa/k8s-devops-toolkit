@@ -57,6 +57,7 @@ _IWHITE  := $(shell tput -Txterm setab 7)
 ##############################
 _OVERIDES_FILES:=Dockerfile .bashrc
 _OPT_SEP := ,
+_CMD:=
 
 ##############################
 # APP VARS
@@ -71,20 +72,10 @@ PORT:=false
 NETWORK:=false
 HOSTNAME:=kdt-$(DATE)
 DOCKER:=false
+CMD:=false
 SHELL_DEBUG?=
-CMD?=
 QUIET?=
 PROFILE?=none
-
-ENV_ARGS := --rm --name "kdt-$(DATE)"
-ifneq ($(FOLDER),)
-	ENV_ARGS := $(ENV_ARGS) -v $(FOLDER):/home/devops/mounted -w /home/devops/mounted
-endif
-
-ifneq ($(DOCKER),false)
-	ENV_ARGS := $(ENV_ARGS) -v /var/run/docker.sock:/var/run/docker.sock:rw
-	AS_ROOT := true
-endif
 
 ifeq ($(DEBUG), false)
 	SHELL_DEBUG := > /dev/null 2>&1
@@ -149,6 +140,17 @@ attach:										##@Commands Start a container of image KDT in interactive mode
 ifeq ($(QUIET),)
 	$(info Attach docker image $(IMAGE_NAME):$(VERSION))
 endif
+	$(eval ENV_ARGS := --rm --name "kdt-$(DATE)")
+ifneq ($(FOLDER),)
+	$(eval ENV_ARGS := $(ENV_ARGS) -v $(FOLDER):/home/devops/mounted -w /home/devops/mounted )
+endif
+ifneq ($(DOCKER),false)
+	$(eval ENV_ARGS := $(ENV_ARGS) -v /var/run/docker.sock:/var/run/docker.sock:rw)
+	$(eval AS_ROOT := true)
+endif
+ifneq ($(CMD),false)
+	$(eval _CMD := /bin/bash -ic '$(CMD)')
+endif
 ifneq ($(AS_ROOT),false)
 	$(eval ENV_ARGS= $(ENV_ARGS) -u root)
 	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.kube-kdt:/root/.kube:Z)
@@ -170,7 +172,7 @@ ifeq (,$(wildcard $(HOME)/.history-kdt))
 	$(shell touch $(HOME)/.history-kdt)
 endif
 	$(eval ENV_ARGS=$(ENV_ARGS) --hostname $(HOSTNAME))
-	@docker run --privileged -it $(ENV_ARGS) $(IMAGE_NAME):$(VERSION) $(CMD)
+	@docker run --privileged -it $(ENV_ARGS) $(IMAGE_NAME):$(VERSION) $(_CMD)
 
 #- VERSIONNING & PUBLISHING TASKS
 .PHONY: publish version-bump
