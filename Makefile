@@ -175,8 +175,29 @@ endif
 	@docker run --privileged -it $(ENV_ARGS) $(IMAGE_NAME):$(VERSION) $(_CMD)
 
 #- VERSIONNING & PUBLISHING TASKS
-.PHONY: publish version-bump
-publish: .splash						##@Publishing Publish images into the registry
+.PHONY: upgrade publish version-bump
+upgrade: .splash 					##@Misc Check for image updates
+ifeq ($(QUIET),)
+	$(info Upgrade)
+	$(info - Get last source versions)
+endif
+	@git fetch --all --tags > /dev/null
+ifeq ($(QUIET),)
+	$(info - Check for updates)
+endif
+	$(eval LAST_TAG := $(shell git describe --tags --abbrev=0))
+	@if [ "v$(VERSION)" == "$(LAST_TAG)" ]; then echo " - No updates"; exit 0; fi
+ifeq ($(QUIET),)
+	$(info - Start KDT updates to $(LAST_TAG))
+endif
+	@git checkout tags/$(LAST_TAG) > /dev/null
+	@$(MAKE) build QUIET=1 DEBUG=$(DEBUG)
+ifeq ($(QUIET),)
+	$(info - Clean previous versions)
+endif
+	@$(MAKE) clean QUIET=1 DEBUG=$(DEBUG)
+
+publish: .splash					##@Publishing Publish images into the registry
 	$(info Publish new version $(VERSION))
 	$(info - set tags)
 	@docker tag $(IMAGE_NAME):$(VERSION) $(IMAGE_NAME):latest
@@ -224,7 +245,6 @@ endif
 	@sed -i.bak -E "/\[Unreleased\]:.*/r .tmp-comments.bak" CHANGELOG.md
 	@awk '!p{p=sub(/\[Unreleased\]:.*/,x)}1' CHANGELOG.md > CHANGELOG.md.bak && rm CHANGELOG.md && mv CHANGELOG.md.bak CHANGELOG.md
 
-	
 	$(info - Save git modifications)
 	@git add Makefile $(SHELL_DEBUG)
 	@git add CHANGELOG.md $(SHELL_DEBUG)

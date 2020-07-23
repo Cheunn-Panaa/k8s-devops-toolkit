@@ -10,11 +10,12 @@ et le projet suit les pratiques [Semantic Versioning](https://semver.org/spec/v2
 ### Added
 
 - :heavy_plus_sign: Ajout des alias docker dcc et dci pour le nettoyage de docker.
+- :heavy_plus_sign: Ajout de la commande upgrade pour la mise à jour automatique.
 
 ### Changed
 
 - :zap: Si option `DOCKER` actif l'option `AS_ROOT` est automatiquement actif aussi.
-- :zap: Auto inclusion de `/bin/bash -ic ` quand CMD est invoqué.
+- :zap: Auto inclusion de `/bin/bash -ic` quand CMD est invoqué.
 
 ### Deprecated
 
