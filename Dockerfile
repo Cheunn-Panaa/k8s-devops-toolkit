@@ -95,7 +95,7 @@ RUN curl -Lso popeye.tar.gz ${POPEYE_URL} \
 
 
 ## FEATURE AWS
-#ENV CLI_VERSION=1.18.188
+#ENV CLI_VERSION=1.22.53
 #RUN apk -uv add --no-cache groff jq less \
 #    py3-pip && pip3 install --upgrade pip \
 #    pip install --no-cache-dir awscli==$CLI_VERSION \

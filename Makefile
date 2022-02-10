@@ -15,7 +15,7 @@
 -include mk/modules/version-standalone.mk
 APP_NAME = KDT
 VERSION_MAJOR = 0
-VERSION_MINOR = 11
+VERSION_MINOR = 12
 VERSION_PATCH = 0
 VERSION_PRE_ID =
 VERSION_PRE_NB = 0
