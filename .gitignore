@@ -3,3 +3,8 @@
 mk
 .DS_Store
 .idea
+.DS_Store
+profiles/**
+!profiles/all
+!profiles/dev
+!profiles/ops

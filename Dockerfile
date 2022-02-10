@@ -23,13 +23,13 @@ ENV INSTALL_DIR /tmp/install
 RUN mkdir ${INSTALL_DIR}
 WORKDIR /tmp/install
 
-ENV DOCKER_VERSION 20.10.11
+ENV DOCKER_VERSION 20.10.12
 ENV DOCKER_URL https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz
 RUN curl -fsSLo docker.tgz ${DOCKER_URL} \
     && tar xzvf docker.tgz --strip 1 -C /usr/local/bin docker/docker \
     && rm docker.tgz
 
-ENV KUBECTL_VERSION 1.22.4
+ENV KUBECTL_VERSION 1.23.3
 ENV KUBECTL_URL https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl
 # STABLE VERSION: https://storage.googleapis.com/kubernetes-release/release/stable.txt
 RUN curl -Lso /usr/local/bin/kubectl ${KUBECTL_URL} \
@@ -54,7 +54,7 @@ RUN curl -Lso kubectx.tar.gz ${KUBECTX_URL}/kubectx_v${KUBECTX_VERSION}_linux_x8
     && mv kubens /usr/local/bin/ \
     && rm -rf ./*
 
-ENV K9S_VERSION 0.25.3
+ENV K9S_VERSION 0.25.18
 ENV K9S_URL https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_x86_64.tar.gz
 RUN curl -Lso k9s.tar.gz ${K9S_URL} \
     && tar -xzf k9s.tar.gz \
@@ -79,7 +79,7 @@ RUN curl -Lso popeye.tar.gz ${POPEYE_URL} \
     && rm -rf ./*
 
 ## FEATURE GCP
-#ENV CLOUD_SDK_VERSION=370.0.0
+#ENV CLOUD_SDK_VERSION=372.0.0
 #ENV PATH /google-cloud-sdk/bin:$PATH
 #RUN addgroup -g 1000 -S cloudsdk && \
 #    adduser -u 1000 -S cloudsdk -G cloudsdk
@@ -117,7 +117,7 @@ RUN curl -Lso popeye.tar.gz ${POPEYE_URL} \
 ## END FEATURE HELM
 
 ## FEATURE KUSTOMIZE
-# ENV KUSTOMIZE_VERSION 4.4.1
+# ENV KUSTOMIZE_VERSION 4.5.2
 # ENV KUSTOMIZE_URL https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz
 # RUN curl -Lso kustomize.tar.gz ${KUSTOMIZE_URL} \
 #     && tar -xzf kustomize.tar.gz \
