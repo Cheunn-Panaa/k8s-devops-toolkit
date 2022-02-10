@@ -1,0 +1,59 @@
+variables:
+  WEBHOOK_URL_DEV: https://hooks.slack.com/services/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 #Dev Channel
+  WEBHOOK_URL_RECETTE: https://hooks.slack.com/services/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 #Recette Channel
+  WEBHOOK_URL_MEP: https://hooks.slack.com/services/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 #Recette Mep
+  TEMPLATE_MSG_SLACK: |
+    {
+      "attachments": [
+        {
+          "fallback": "Required plain-text summary of the attachment.",
+          "color": "#36a64f",
+          "pretext": "GitLab CI - Deployement notification",
+          "author_name": "Bobby Tables",
+          "title": "Slack API Documentation",
+          "title_link": "https://api.slack.com/",
+          "text": "Optional text that appears within the attachment",
+          "footer": "Dolmen Robot",
+          "footer_icon": "https://www.dolmen-tech.com/voy_content/uploads/2017/04/logo-dolmen.jpg",
+          "ts": 123456789
+        }
+      ]
+    }
+
+.slack:notif:send:
+  before_script:
+    - apk add --update --no-cache jq curl
+  after_script:
+    - |
+      if [ -e success ]; then
+        echo "Ready for success"
+      else
+        echo "Ready for failure"
+      fi
+    - if [ -f .env ] ; then cat .env; export $(cat .env | xargs); fi
+    - export BUILD_DATE=$(date +%s)
+    - export MSG_SLACK=$TEMPLATE_MSG_SLACK
+    - export MSG_SLACK=$(echo $MSG_SLACK |  jq --arg variable "$SLACK_COLOR" '.attachments[0].color=$variable')
+    - export MSG_SLACK=$(echo $MSG_SLACK |  jq --arg variable "$BUILD_DATE" '.attachments[0].ts=$variable')
+    - export MSG_SLACK=$(echo $MSG_SLACK |  jq --arg variable "$GITLAB_USER_NAME" '.attachments[0].author_name=$variable')
+    - export MSG_SLACK=$(echo $MSG_SLACK |  jq --arg variable "$SLACK_TITLE" '.attachments[0].title=$variable')
+    - export MSG_SLACK=$(echo $MSG_SLACK |  jq --arg variable "$SLACK_TEXT" '.attachments[0].text=$variable')
+    - export MSG_SLACK=$(echo $MSG_SLACK |  jq --arg variable "$CI_PIPELINE_URL" '.attachments[0].title_link=$variable')
+    - echo "MSG_SLACK = $MSG_SLACK"
+    - curl -X POST -H 'Content-type:application/json' --data "$MSG_SLACK" $WEBHOOK_URL
+
+.slack-notif-send:
+  script:
+    - export BUILD_DATE=$(date +%s)
+    - export MSG_SLACK=$TEMPLATE_MSG_SLACK
+    - export MSG_SLACK=$(echo $MSG_SLACK |  jq --arg variable "$SLACK_COLOR" '.attachments[0].color=$variable')
+    - export MSG_SLACK=$(echo $MSG_SLACK |  jq --arg variable "$BUILD_DATE" '.attachments[0].ts=$variable')
+    - export MSG_SLACK=$(echo $MSG_SLACK |  jq --arg variable "$GITLAB_USER_NAME" '.attachments[0].author_name=$variable')
+    - export MSG_SLACK=$(echo $MSG_SLACK |  jq --arg variable "$SLACK_TITLE" '.attachments[0].title=$variable')
+    - export MSG_SLACK=$(echo $MSG_SLACK |  jq --arg variable "$SLACK_TEXT" '.attachments[0].text=$variable')
+    - export MSG_SLACK=$(echo $MSG_SLACK |  jq --arg variable "$CI_PIPELINE_URL" '.attachments[0].title_link=$variable')
+    - echo "MSG_SLACK = $MSG_SLACK"
+    - |
+      if [[ -n "$WEBHOOK_URL" ]] ; then
+        curl -X POST -H 'Content-type:application/json' --data "$MSG_SLACK" $WEBHOOK_URL
+      fi

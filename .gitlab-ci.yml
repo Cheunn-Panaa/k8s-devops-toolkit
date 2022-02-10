@@ -1,7 +1,5 @@
-include:
-  - project: 'dolmen-tech/core/gitlabci'  
-    ref: feature/java-ci-optim
-    file: /components/slack.yml
+include
+  - .ci/gitlab/components/slack.yml
 
 stages:
   - notify
@@ -18,11 +16,13 @@ release:notify:
   stage: notify
   image: "debian:buster-slim"
   variables:
-    WEBHOOK_URL: https://hooks.slack.com/services/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
+    WEBHOOK_URL: https://hooks.slack.com/services/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
     SLACK_COLOR: "#36a64f"
     SLACK_TITLE: "[KDT] Nouvelle version (${CI_COMMIT_TAG})"
-    SLACK_TEXT: "Une nouvelle version de KDT est maintenant disponible.\ https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/-/blob/${CI_COMMIT_TAG}/CHANGELOG.md"
+    SLACK_TEXT: "Une nouvelle version de KDT est maintenant disponible.\n https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/-/blob/${CI_COMMIT_TAG}/CHANGELOG.md"
   extends:
     - .slack:notif:send
+    - .matcher:rules:release
   script:
-    - echo "Ready"
+    - apt-get -qq update
+    - apt-get -qq install -y curl jq > /dev/null

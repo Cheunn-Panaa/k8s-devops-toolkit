@@ -22,7 +22,19 @@
 
 1. Clone this project repository into your computer.
 
-2. To add to your to your favorite `shell` the KDT alias to access quickly to the batch of
+   ```bash
+   git clone git@gitlab.com:dolmen-tech/tools/k8s-devops-toolkit.git
+   ```
+
+2. Install Awesome Makefile Framework.
+
+   ```bash
+   cd k8s-devops-toolkit
+
+   curl -sL https://github.com/BROUSSOLLE-Brice/awsome-makefile-framework/releases/latest/download/installer | sh
+   ```
+
+3. To add to your to your favorite `shell` the KDT alias to access quickly to the batch of
    commands, launch one of those lines, depending of your shell.
 
    ```bash
@@ -33,7 +45,7 @@
    echo "alias kdt=\"`make print-alias`\"" >> ~/.bashrc
    ```  
 
-3. [Build](#build-image) your image and [configure](#configuration) your Kubernetes clusters
+4. [Build](#build-image) your image and [configure](#configuration) your Kubernetes clusters
 
 [Top](#summary)
 
@@ -57,28 +69,25 @@ kdt build
 
 [Top](#summary)
 
-### Start container
+### Help
 
-To start a container with all tools
+To display general help use the command `kdt help`.
 
-```bash
-# Into the the project folder
-make attach [FOLDER=<folder-path-to-mount>] [PORT=<port-number>] [DEBUG=false|*]
-
-# From everywhere with the alias
-## FOLDER parameter is automaticaly set with 'kdt' alias with the current folder
-kdt attach [PORT=<port-number>] [DEBUG=false|*]
-```
+For more detailed help per command use the command `kdt <command> HELP=true`.
 
 [Top](#summary)
 
 ### Configuration
 
-#### First init of GCloud
+- [Configure for GCloud](#####Configure for GCloud)
+- [Configure for AWS](./docs/AWS.md)
+- [Configure for Azure](./docs/Azure.md)
 
+
+#### Configure for GCloud
 ```bash
 # Go into the container
-kdt attach
+kdt
 
 # Follow the instruction of the command gcloud init
 gcloud init
@@ -95,49 +104,6 @@ gcloud container clusters get-credentials <CLUSTER_NAME> --region <REGION> --pro
 # To help you during Operational phase, rename the cluster name like this example:
 kx production=gke_kogus-production_europe-west1_pkub
 ```
-
-[Top](#summary)
-
-### List of commands
-
-#### Glogals
-
-* **build** : Build local docker image of KDT
-* **clean** : Remove other images of KDT
-* **remove** : Remove local docker image of KDT
-* **attach**: Start a container of image KDT in interactive mode
-  * FOLDER *(default: false, ex: /my/folder/path)*<br>
-    Define the folder to mount into the container.<br>
-    If you'r using the shell alias `kdt` this variable is set with the current folder.
-  * PORT *(default: false, ex: 2222 or 8080,9090)*<br>
-    Define the port binded on the host to give access to your web browser or your
-    ssh client.
-  * DOCKER *(default: false, ex: true)*<br>
-    Set if you need to mount the docker daemon socket into the container.
-
-[Top](#summary)
-
-#### Default
-
-* **help** : Display help
-* **print-alias** : Print shortcut command for your alias file
-* **version** : Get the current version
-
-[Top](#summary)
-
-#### Publishing
-
-* **publish** : Publish images into the registry
-* **version-bump** : Bump version
-  * BUMP_TYPE *(values: major | minor | patch)* <br>
-    Define witch type of bump you want to apply.
-
-[Top](#summary)
-
-#### Global parameters
-
-* DEBUG *(default: false, ex: 1)*<br>
-  Display all information from Docker command into the prompt.
 
 [Top](#summary)
 
@@ -175,9 +141,9 @@ kx production=gke_kogus-production_europe-west1_pkub
 
 [Top](#summary)
 
-## Advanced usage
+## Modules
 
-Here, found all usecases usefull commands.
+KDT use multiple kind of [modules](./docs/README.md) activated by user profiles.
 
 [Top](#summary)
 

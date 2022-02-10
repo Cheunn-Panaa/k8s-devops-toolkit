@@ -38,7 +38,8 @@ alias sa="k get serviceaccounts"
 alias kpf="k port-forward --address=0.0.0.0"
 
 alias telnet="busybox-extras telnet"
-alias bastion="kpf -n bastion `kubectl get pods -n bastion -o=jsonpath='{.items[:1].metadata.name}'` 2222:2222"
+alias bastion='kpf -n bastion `kubectl get pods -n bastion -o=jsonpath="{.items[:1].metadata.name}"` 2222:2222'
+alias curlbox="k run curlbox --image=radial/busyboxplus:curl -i --tty --rm"
 alias sql="kpf svc/cloudsql-proxy 3306:3306"
 
 complete -F __start_kubectl k
@@ -56,9 +57,23 @@ alias dci="docker images | grep '<none>' | sed -e's/  */ /g' |  cut -d ' ' -f 3 
 ## END FEATURE BAT
 
 ## FEATURE KUSTOMIZE
-# complete -C /usr/local/bin/kustomize kustomize
+# source <(kustomize completion bash)
 ## END FEATURE KUSTOMIZE
 
 ## FEATURE KOMPOSE
 # source <(kompose completion bash)
 ## END FEATURE KOMPOSE
+
+## FEATURE DBCLIENTS
+# export PATH="/opt/mssql-tools/bin:$PATH"
+# function binddb { kpf svc/cloudsql-proxy $1:3306 ; }
+# alias cnxdb='mysql -h 127.0.0.1 -p -u admin -P'
+## END FEATURE DBCLIENTS
+
+## FEATURE SLIMPROMPT
+# export PS1='\W $(kube_ps1)\$ '
+## END FEATURE SLIMPROMPT
+
+## FEATURE SKAFFOLD
+# source <(skaffold completion bash)
+## END FEATURE SKAFFOLD

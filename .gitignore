@@ -1,2 +1,5 @@
 *.bak
 .profile
+mk
+.DS_Store
+.idea

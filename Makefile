@@ -1,5 +1,5 @@
 ##############################################################
-#    ______   _______  ___      __   __  _______  __    _ 
+#    ______   _______  ___      __   __  _______  __    _
 #   |      | |       ||   |    |  |_|  ||       ||  |  | |
 #   |  _    ||   _   ||   |    |       ||    ___||   |_| |
 #   | | |   ||  | |  ||   |    |       ||   |___ |       |
@@ -9,136 +9,74 @@
 #                     K8S DEVOPS TOOLKIT
 ##############################################################
 ## Author: Brice BROUSSOLLE <brice.broussolle@dolmen-tech.com
+## Contributors: Cheunn Nourry <cheunn.nourry@dolmen-tech.com> / <cnourry.dev@protonmail.com>
 ##############################################################
 
-##############################
-# STD VARS
-##############################
-_TITLE:=H4sIAD43fV4AA3VQ2w2EMAz77xQe4wY4PhBIPQnErxfx8NAkfQC6qoocx07SgnYAsCJPjYkwlIxHkiuEAJAs9SAqmFqyq2JjU/Np643KRC/RbT7IO+mvTWXJxhQbm62tdBeN01htY+0BJFrsjWK1JP8kIcCl6yDecmeuTAmvs3w2fKcj/zbsOa/LvJ8yr90opQEAAA==
-_CURRENT_USER:=$(shell whoami)
-_OS_ARG:=$(shell base64 --help| grep 'decode' | cut -d, -f1 | awk '{$$1=$$1};1' | cut -c1-2)
-DATE:=`date +'%Y%m%d-%H%M%S'`
-VERSION_MAJOR:=0
-VERSION_MINOR:=8
-VERSION_PATCH:=0
-VERSION?=$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)
-.DEFAULT_GOAL:=attach
+-include mk/modules/version-standalone.mk
+APP_NAME = KDT
+VERSION_MAJOR = 0
+VERSION_MINOR = 11
+VERSION_PATCH = 0
+VERSION_PRE_ID =
+VERSION_PRE_NB = 0
 
-##############################
-# TYPO
-##############################
-_END   := $(shell tput -Txterm sgr0)
-_BOLD  := $(shell tput -Txterm bold)
-_UNDER := $(shell tput -Txterm smul)
-_REV   := $(shell tput -Txterm rev)
+-include mk/modules/splash.mk
+_TITLE := \
+H4sIAD43fV4AA3VQ2w2EMAz77xQe4wY4PhBIPQnErxfx8NAkfQC6qoocx07SgnYAsCJPjYkwlIxHkiuEAJAs9SAqm\
+Fqyq2JjU/Np643KRC/RbT7IO+mvTWXJxhQbm62tdBeN01htY+0BJFrsjWK1JP8kIcCl6yDecmeuTAmvs3w2fKcj/z\
+bsOa/LvJ8yr90opQEAAA==
 
-# Colors
-_GREY   := $(shell tput -Txterm setaf 0)
-_RED    := $(shell tput -Txterm setaf 1)
-_GREEN  := $(shell tput -Txterm setaf 2)
-_YELLOW := $(shell tput -Txterm setaf 3)
-_BLUE   := $(shell tput -Txterm setaf 4)
-_PURPLE := $(shell tput -Txterm setaf 5)
-_CYAN   := $(shell tput -Txterm setaf 6)
-_WHITE  := $(shell tput -Txterm setaf 7)
+# include mk/modules/amf-update-autocheck.mk
 
-# Inverted, i.e. colored backgrounds
-_IGREY   := $(shell tput -Txterm setab 0)
-_IRED    := $(shell tput -Txterm setab 1)
-_IGREEN  := $(shell tput -Txterm setab 2)
-_IYELLOW := $(shell tput -Txterm setab 3)
-_IBLUE   := $(shell tput -Txterm setab 4)
-_IPURPLE := $(shell tput -Txterm setab 5)
-_ICYAN   := $(shell tput -Txterm setab 6)
-_IWHITE  := $(shell tput -Txterm setab 7)
+-include mk/modules/changelog-git-diff.mk
+CHANGELOG_URL = https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit
 
-##############################
-# PRIVATE VARS
-##############################
-_OVERIDES_FILES:=Dockerfile .bashrc
-_OPT_SEP := ,
-_CMD:=
+-include mk/main.mk
+AMF_VERSION_EARLY_MODE = true
 
-##############################
-# APP VARS
-##############################
-IMAGE_NAME?=dolmen/kdt
-BUMP_TYPE?=
-GIT_MODIFICATION?=$(git diff-index --quiet HEAD -- || true);
+IMAGE_NAME := dolmen/kdt
+_OVERIDES_FILES := Dockerfile .bashrc
+.DEFAULT_GOAL := attach
+LB_HELP_OPTIONS := Global options
+
+# PUBLIC TASKS
+###############
+
+PHONY += attach
+ifeq ($(HELP),true)
+attach: .init	##@Commands Start KDT container
+	@echo "Usage: make attach"
+	@echo
+	@echo "The $(_BOLD)attach$(_END) rule run a KDT container"
+	@echo
+	@echo "${_WHITE}Options:${_END}"
+	$(call _PRINT_OPTION,FOLDER,,Define folder to be mounted into the container)
+	$(call _PRINT_OPTION,DOCKER,false,Define if container need to implement Docker\
+	°daemon into the container)
+	$(call _PRINT_OPTION,AS_ROOT,false,Define if container user is root)
+	$(call _PRINT_OPTION,PORT,,Set a list of ports pushed to the host.\
+	°Ports must be seperated by a comma)
+	$(call _PRINT_OPTION,CMD,,Command executed only if is set)
+	$(call _PRINT_OPTION,NETWORK,,ah ah I don t know)
+	@echo
+	$(call _OPT_DISPLAY)
+	@echo "${_WHITE}Example:${_END}"
+	@echo "  make attach"
+	@echo "  make attach PORT=8080"
+	@echo "  kdt PORT=9090,8080 DOCKER=true AS_ROOT=true CMD='my cmd'"
+	@echo
+else
 FOLDER?=
-AS_ROOT:=false
-DEBUG:=false
 PORT:=false
 NETWORK:=false
+DATE:=`date +'%Y%m%d-%H%M%S'`
 HOSTNAME:=kdt-$(DATE)
 DOCKER:=false
+AS_ROOT:=$(if $(filter-out $(DOCKER),false),true,false)
 CMD:=false
-SHELL_DEBUG?=
-QUIET?=
-PROFILE?=$(if $(wildcard ./.profile),none,$(shell cat ./.profile))
-
-ifeq ($(DEBUG), false)
-	SHELL_DEBUG := > /dev/null 2>&1
-endif
-
-define newline
-
-
-endef
-
-HELP_FUN = \
-    %help; \
-    while(<>) { push @{$$help{$$2 // 'options'}}, [$$1, $$3] if /^([a-zA-Z\-]+)\s*:.*\#\#(?:@([a-zA-Z\-]+))?\s(.*)$$/ }; \
-    print "usage: make [target]\n\n"; \
-    for (sort keys %help) { \
-    print "${_WHITE}$$_:${_END}\n"; \
-    for (@{$$help{$$_}}) { \
-    $$sep = " " x (32 - length $$_->[0]); \
-    print "  ${_YELLOW}$$_->[0]${_END}$$sep${_GREEN}$$_->[1]${_END}\n"; \
-    }; \
-    print "\n"; }
-
-check_defined = \
-    $(strip $(foreach 1,$1, \
-        $(call __check_defined,$1,$(strip $(value 2)))))
-__check_defined = \
-    $(if $(value $1),, \
-		$(error Undefined $1$(if $2, ($2))))
-
-define _SPLASH
-	@echo "${_TITLE}" | base64 $(_OS_ARG) | zcat 
-	@echo "\n\t\t\t\t\t Version ${_BOLD}${_GREEN}${VERSION}${_END}\n"
-endef
-
-##############################
-# TASKS
-##############################
-.PHONY: build remove attach a change-log
-#- DOCKER TASKS
-build: .splash						##@Commands Build local docker image of KDT
-	$(info Build docker image $(IMAGE_NAME):$(VERSION))
-	$(if $(filter "$(PROFILE)", "none"), \
-		@echo "> No profile activated", \
-		$(call _APPLY_PROFILE) \
-	)
-	@docker build \
-		--build-arg PROFILE=$(PROFILE) \
-		-t "$(IMAGE_NAME):$(VERSION)" . $(SHELL_DEBUG)
-	@git checkout $(_OVERIDES_FILES) $(SHELL_DEBUG)
-
-remove: .splash						##@Commands Remove local docker image of KDT
-	$(info Remove docker image $(IMAGE_NAME):$(VERSION))
-	@docker rmi -f "$(IMAGE_NAME):$(VERSION)" $(SHELL_DEBUG)
-
-clean: .splash						##@Commands Remove other images of KDT
-	$(info Clean other versions)
-	$(eval IMG_TO_RM=$(foreach tag,$(shell docker images $(IMAGE_NAME) --format "{{.Tag}}"),$(if $(filter-out $(tag),$(VERSION)),$(IMAGE_NAME):$(tag))))
-	@docker rmi -f $(IMG_TO_RM) $(SHELL_DEBUG)
-
-a: attach
-attach:	.splash						##@Commands Start a container of image KDT in interactive mode
+attach: .init
 ifeq ($(QUIET),)
-	$(info Attach docker image $(IMAGE_NAME):$(VERSION))
+	$(call _PRINT_CMD,Attach KDT v$(VERSION) container)
 endif
 	$(eval ENV_ARGS := --rm --name "kdt-$(DATE)")
 ifneq ($(FOLDER),)
@@ -146,20 +84,19 @@ ifneq ($(FOLDER),)
 endif
 ifneq ($(DOCKER),false)
 	$(eval ENV_ARGS := $(ENV_ARGS) -v /var/run/docker.sock:/var/run/docker.sock:rw)
-	$(eval AS_ROOT := true)
 endif
 ifneq ($(CMD),false)
 	$(eval _CMD := /bin/bash -ic '$(CMD)')
 endif
 ifneq ($(AS_ROOT),false)
 	$(eval ENV_ARGS= $(ENV_ARGS) -u root)
-	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.kube-kdt:/root/.kube:Z)
-	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.gcloud-kdt:/root/.config/gcloud:Z)
-	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.history-kdt:/root/.bash_history:Z)	
+	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.kube:/root/.kube:Z)
+	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.config:/root/.config/:Z)
+	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.history-kdt:/root/.bash_history:Z)
 else
-	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.kube-kdt:/home/devops/.kube:Z)
-	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.gcloud-kdt:/home/devops/.config/gcloud:Z)
-	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.history-kdt:/home/devops/.bash_history:Z)	
+	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.kube:/home/devops/.kube:Z)
+	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.config:/home/devops/.config/:Z)
+	$(eval ENV_ARGS=$(ENV_ARGS) -v $(HOME)/.history-kdt:/home/devops/.bash_history:Z)
 endif
 ifneq ($(PORT),false)
 	$(eval PORTS= $(subst $(_OPT_SEP), ,$(PORT)))
@@ -173,149 +110,79 @@ ifeq (,$(wildcard $(HOME)/.history-kdt))
 endif
 	$(eval ENV_ARGS=$(ENV_ARGS) --hostname $(HOSTNAME))
 	@docker run --privileged -it $(ENV_ARGS) $(IMAGE_NAME):$(VERSION) $(_CMD)
-
-#- VERSIONNING & PUBLISHING TASKS
-.PHONY: upgrade publish version-bump
-upgrade: .splash 					##@Misc Check for image updates
-ifeq ($(QUIET),)
-	$(info Upgrade)
-	$(info - Get last source versions)
-endif
-	@git fetch --all --tags > /dev/null
-ifeq ($(QUIET),)
-	$(info - Check for updates)
-endif
-	$(eval LAST_TAG := $(shell git describe --tags --abbrev=0))
-	@if [ "v$(VERSION)" == "$(LAST_TAG)" ]; then echo " - No updates"; exit 0; fi
-ifeq ($(QUIET),)
-	$(info - Start KDT updates to $(LAST_TAG))
-endif
-	@git checkout tags/$(LAST_TAG) > /dev/null
-	@$(MAKE) build VERSION=$(LAST_TAG) QUIET=1 DEBUG=$(DEBUG)
-ifeq ($(QUIET),)
-	$(info - Clean previous versions)
-endif
-	@$(MAKE) clean VERSION=$(LAST_TAG) QUIET=1 DEBUG=$(DEBUG)
-
-publish: .splash					##@Publishing Publish images into the registry
-	$(info Publish new version $(VERSION))
-	$(info - set tags)
-	@docker tag $(IMAGE_NAME):$(VERSION) $(IMAGE_NAME):latest
-	$(info - push images)
-	@docker push $(IMAGE_NAME):$(VERSION)
-	@docker push $(IMAGE_NAME):latest
-
-version-bump: .splash			##@Publishing Bump version
-	$(call check_defined, BUMP_TYPE)
-
-ifeq ($(GIT_MODIFICATION), true)
-	$(error Untraked file found)
 endif
 
-ifeq ($(BUMP_TYPE), patch)
-	$(info Change Application version)
-	$(info - Increment patch number)
-	$(eval VERSION_PATCH=$(shell echo $$(($(VERSION_PATCH)+1))))
+PHONY += build
+ifeq ($(HELP),true)
+build: .init	##@Application Build Docker image from current sources
+	@echo "Usage: make build"
+	@echo
+	@echo "The $(_BOLD)build$(_END) rule build docker image for KDT"
+	@echo
+	@echo "${_WHITE}Options:${_END}"
+	$(call _PRINT_OPTION,PROFILE,Default,User profile definition\
+	°Available values are all files present in the\
+	°$(_BOLD)profiles folder$(_END))
+	@echo
+	$(call _OPT_DISPLAY)
+	@echo "${_WHITE}Example:${_END}"
+	@echo "  make build"
+	@echo "  make build PROFILE=all"
+	@echo
+else
+PROFILE?=$(if $(wildcard $(PROJECT_DIR).profile),$(shell cat $(PROJECT_DIR).profile),none)
+build: .init
+	$(call _PRINT_CMD,Build KDT v$(VERSION))
+	$(call _PRINT_TASK,Clean directory)
+	@cd $(PROJECT_DIR) && git checkout .
+
+	$(if $(filter "$(PROFILE)", "none"), \
+		@echo "> No profile activated", \
+		$(call _APPLY_PROFILE) \
+	)
+
+	$(call _PRINT_TASK,Create docker image)
+	@cd $(PROJECT_DIR) && docker build \
+	--build-arg PROFILE=$(PROFILE) \
+	-t "$(IMAGE_NAME):$(VERSION)" . $(SHELL_DEBUG)
+
+	$(call _PRINT_TASK,Restore files)
+	@cd $(PROJECT_DIR) && git checkout $(_OVERIDES_FILES) $(SHELL_DEBUG)
 endif
 
-ifeq ($(BUMP_TYPE), minor)
-	$(info Change Application version)
-	$(info - Increment minor number)
-	$(eval VERSION_MINOR=$(shell echo $$(($(VERSION_MINOR)+1))))
-	$(eval VERSION_PATCH=0)
+PHONY += print-alias
+ifeq ($(HELP),true)
+print-alias: .init	##@Other Print shortcut command for your alias file
+	@echo "Usage: make print-alias"
+	@echo
+	@echo "The $(_BOLD)print-alias$(_END) rule give the line for used by the"
+	@echo "user shell."
+	@echo
+	$(call _OPT_DISPLAY)
+	@echo "${_WHITE}Example:${_END}"
+	@echo "  make print-alias"
+	@echo
+else
+print-alias:
+	@echo "make -f $(CURDIR)/Makefile -I $(CURDIR)/ FOLDER=\\\`pwd\\\`"
 endif
-
-ifeq ($(BUMP_TYPE), major)
-	$(info Change Application version)
-	$(info - Increment major number)
-	$(eval VERSION_MAJOR=$(shell echo $$(($(VERSION_MAJOR)+1))))
-	$(eval VERSION_PATCH=0)
-	$(eval VERSION_MINOR=0)
-endif
-	
-	$(info - Change version number into the Makefile)
-	@sed -i.bak -E 's@^VERSION_PATCH:=.+@VERSION_PATCH:=$(VERSION_PATCH)@g' ./Makefile
-	@sed -i.bak -E 's@^VERSION_MINOR:=.+@VERSION_MINOR:=$(VERSION_MINOR)@g' ./Makefile
-	@sed -i.bak -E 's@^VERSION_MAJOR:=.+@VERSION_MAJOR:=$(VERSION_MAJOR)@g' ./Makefile
-	
-	$(info - Make changelog)
-	@$(MAKE) .changelog-list VERSION="$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)" $(SHELL_DEBUG) > .tmp-comments.bak
-	@sed -i.bak -E "/## \[Unreleased\]/r .tmp-comments.bak" CHANGELOG.md
-	@$(MAKE) .changelog-compare VERSION="$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)" $(SHELL_DEBUG) > .tmp-comments.bak
-	@sed -i.bak -E "/\[Unreleased\]:.*/r .tmp-comments.bak" CHANGELOG.md
-	@awk '!p{p=sub(/\[Unreleased\]:.*/,x)}1' CHANGELOG.md > CHANGELOG.md.bak && rm CHANGELOG.md && mv CHANGELOG.md.bak CHANGELOG.md
-
-	$(info - Save git modifications)
-	@git add Makefile $(SHELL_DEBUG)
-	@git add CHANGELOG.md $(SHELL_DEBUG)
-	@git commit -m "v$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)" $(SHELL_DEBUG)
-	@git tag v$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH) $(SHELL_DEBUG)
-
-	@echo new version : v$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)
-
-	@if make .prompt-yesno message="Do you want push branch and tag" 2> /dev/null; then \
-		git push; \
-		git push --tags; \
-	fi
-
-help: .splash					##@Other Display this help
-	@perl -e '$(HELP_FUN)' $(MAKEFILE_LIST)
-
-print-alias: 					##@Other Print shortcut command for your alias file
-	@echo "make -f $(CURDIR)/Makefile FOLDER=\\\`pwd\\\`"
-
-version: .splash			##@Other Get the current version
-
-##############################
 # PRIVATE TASKS
-##############################
-.prompt-yesno:
-	@echo "$(message)? [y/N] " && read ans && [ $${ans:-N} = y ]
-
-.splash:
-ifeq ($(QUIET),)
-	$(call _SPLASH)
-endif
-
-.changelog-list: 
-	$(eval _GIT_LAST_TAG=$(shell git describe --tags --abbrev=0))
-	@echo
-	@echo "### Added"
-	@echo
-	@echo "### Changed"
-	@echo
-	@echo "### Deprecated"
-	@echo
-	@echo "### Removed"
-	@echo
-	@echo "### Fixed"
-	@echo
-	@echo "### Security"
-	@echo
-	@echo "## [$(VERSION)] - $(shell date +'%Y-%m-%d')"
-	@echo
-	@echo "### Commit comments" 
-	@echo
-	@echo - $(subst \n ,$(newline) @echo - ,$(subst ",‘,$(subst ',‘,$(shell git log $(_GIT_LAST_TAG)..HEAD --pretty=format:"%s\n"))))
-
-.changelog-compare:
-	$(eval _GIT_LAST_TAG=$(shell git describe --tags --abbrev=0))
-	@echo "[Unreleased]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/v$(VERSION)...master"
-	@echo "[$(VERSION)]: https://gitlab.com/dolmen-tech/tools/k8s-devops-toolkit/compare/$(_GIT_LAST_TAG)...v$(VERSION)"
+################
 
 define _APPLY_PROFILE
-	@echo "> Apply profile '$(PROFILE)'"
-	@echo "$(PROFILE)" > ./.profile
-	@if [ ! -f "./profiles/$(PROFILE)" ]; then \
-		echo "-> Profile not exist in folder '$(shell pwd)/profiles'"; \
+	$(call _PRINT_TASK,Apply profile '$(PROFILE)')
+	@echo "$(PROFILE)" > $(PROJECT_DIR).profile
+	@if [ ! -f "$(PROJECT_DIR)profiles/$(PROFILE)" ]; then \
+		echo "-> Profile not exist in folder '$(PROJECT_DIR)profiles'"; \
 		exit 2; \
 	 fi
-	$(foreach file,$(_OVERIDES_FILES),$(call _APPLY_PROFILE_TO_FILE,$(file))${newline})
+	$(foreach file,$(_OVERIDES_FILES),$(call _APPLY_PROFILE_TO_FILE,$(file))${\n})
 endef
 
 define _APPLY_PROFILE_TO_FILE
+	$(call _PRINT_SUBTASK,Apply profile to file '$(1)')
 	@echo "-> Modify file '$(1)'"
-	$(foreach feature,$(shell cat "./profiles/$(PROFILE)"),$(call _APPLY_FEATURE_TO_FILE,$(1),$(feature))${newline})
+	$(foreach feature,$(shell cat "$(PROJECT_DIR)profiles/$(PROFILE)"),$(call _APPLY_FEATURE_TO_FILE,$(PROJECT_DIR)$(1),$(feature))${\n})
 endef
 
 define _APPLY_FEATURE_TO_FILE
@@ -329,5 +196,13 @@ define _APPLY_FEATURE_TO_FILE
 		 else \
 		 	sed -i.bak "$${LINE_START},$${LINE_END}s/# *//" $(1); \
 			echo "---> Activated" ; \
-		 fi	
+		 fi
+endef
+
+define _UPDATE_NEEDS
+	@echo "${_BOLD}${_YELLOW}KDT needs to be updated${_END}"
+	@if $(MAKE) .prompt-yesno message="Do you want to updates KDT now" 2> /dev/null; then \
+		$(MAKE) QUIET=true upgrade; \
+		exit; \
+	fi
 endef
